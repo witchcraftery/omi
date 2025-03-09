@@ -60,18 +60,21 @@ class AppMetadataWidget extends StatelessWidget {
                     height: MediaQuery.of(context).size.width * 0.28,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30.0),
-                      border: Border.all(color: Colors.grey.shade800, width: 2.0),
+                      border:
+                          Border.all(color: Colors.grey.shade800, width: 2.0),
                     ),
                     child: imageFile != null || imageUrl != null
                         ? (imageUrl == null
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(30.0),
-                                child: Image.file(imageFile!, fit: BoxFit.cover))
+                                child:
+                                    Image.file(imageFile!, fit: BoxFit.cover))
                             : ClipRRect(
                                 borderRadius: BorderRadius.circular(30.0),
                                 child: CachedNetworkImage(imageUrl: imageUrl!),
                               ))
-                        : const Icon(Icons.add_a_photo, color: Colors.grey, size: 32),
+                        : const Icon(Icons.add_a_photo,
+                            color: Colors.grey, size: 32),
                   ),
                 ),
                 (imageFile != null || imageUrl != null)
@@ -116,12 +119,15 @@ class AppMetadataWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
                       'App Name',
-                      style: TextStyle(color: Colors.grey.shade300, fontSize: 16),
+                      style:
+                          TextStyle(color: Colors.grey.shade300, fontSize: 16),
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                    margin: const EdgeInsets.only(left: 2.0, right: 2.0, top: 10, bottom: 6),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 6.0),
+                    margin: const EdgeInsets.only(
+                        left: 2.0, right: 2.0, top: 10, bottom: 6),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade800,
                       borderRadius: BorderRadius.circular(10.0),
@@ -150,7 +156,8 @@ class AppMetadataWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
                       'Category',
-                      style: TextStyle(color: Colors.grey.shade300, fontSize: 16),
+                      style:
+                          TextStyle(color: Colors.grey.shade300, fontSize: 16),
                     ),
                   ),
                   GestureDetector(
@@ -159,10 +166,12 @@ class AppMetadataWidget extends StatelessWidget {
                         context: context,
                         isScrollControlled: true,
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(16)),
                         ),
                         builder: (context) {
-                          return Consumer<AddAppProvider>(builder: (context, provider, child) {
+                          return Consumer<AddAppProvider>(
+                              builder: (context, provider, child) {
                             return Container(
                               padding: const EdgeInsets.all(16.0),
                               height: MediaQuery.of(context).size.height * 0.6,
@@ -176,7 +185,8 @@ class AppMetadataWidget extends StatelessWidget {
                                     ),
                                     const Text(
                                       'App Category',
-                                      style: TextStyle(color: Colors.white, fontSize: 18),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
                                     ),
                                     const SizedBox(
                                       height: 18,
@@ -190,33 +200,44 @@ class AppMetadataWidget extends StatelessWidget {
                                       },
                                       shrinkWrap: true,
                                       itemCount: categories.length,
-                                      physics: const NeverScrollableScrollPhysics(),
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
                                       itemBuilder: (context, index) {
                                         return InkWell(
                                           onTap: () {
-                                            provider.setAppCategory(categories[index].id);
+                                            provider.setAppCategory(
+                                                categories[index].id);
                                             Navigator.pop(context);
                                           },
                                           child: Container(
-                                            padding: const EdgeInsets.symmetric(vertical: 10),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10),
                                             child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
                                               children: [
                                                 const SizedBox(
                                                   width: 6,
                                                 ),
                                                 Text(
                                                   categories[index].title,
-                                                  style: TextStyle(color: Colors.grey.shade300, fontSize: 16),
+                                                  style: TextStyle(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                      fontSize: 16),
                                                 ),
                                                 const Spacer(),
                                                 Checkbox(
-                                                  value: provider.appCategory == categories[index].id,
+                                                  value: provider.appCategory ==
+                                                      categories[index].id,
                                                   onChanged: (value) {
-                                                    provider.setAppCategory(categories[index].id);
+                                                    provider.setAppCategory(
+                                                        categories[index].id);
                                                     Navigator.pop(context);
                                                   },
-                                                  side: BorderSide(color: Colors.grey.shade300),
+                                                  side: BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300),
                                                   shape: const CircleBorder(),
                                                 ),
                                               ],
@@ -234,8 +255,10 @@ class AppMetadataWidget extends StatelessWidget {
                       );
                     },
                     child: Container(
-                      margin: const EdgeInsets.only(left: 2.0, right: 2.0, top: 10, bottom: 6),
-                      padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 10.0),
+                      margin: const EdgeInsets.only(
+                          left: 2.0, right: 2.0, top: 10, bottom: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 2.0, vertical: 10.0),
                       decoration: BoxDecoration(
                         color: Colors.grey.shade800,
                         borderRadius: BorderRadius.circular(10.0),
@@ -247,9 +270,15 @@ class AppMetadataWidget extends StatelessWidget {
                             width: 12,
                           ),
                           Text(
-                            (category?.isNotEmpty == true ? category : 'Select Category') ?? 'Select Category',
+                            (category?.isNotEmpty == true
+                                    ? category
+                                    : 'Select Category') ??
+                                'Select Category',
                             style: TextStyle(
-                                color: category != null ? Colors.grey.shade100 : Colors.grey.shade400, fontSize: 16),
+                                color: category != null
+                                    ? Colors.grey.shade100
+                                    : Colors.grey.shade400,
+                                fontSize: 16),
                           ),
                           const Spacer(),
                           Icon(
@@ -270,12 +299,15 @@ class AppMetadataWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
                       'Description',
-                      style: TextStyle(color: Colors.grey.shade300, fontSize: 16),
+                      style:
+                          TextStyle(color: Colors.grey.shade300, fontSize: 16),
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                    margin: const EdgeInsets.only(left: 2.0, right: 2.0, top: 10, bottom: 6),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 8.0),
+                    margin: const EdgeInsets.only(
+                        left: 2.0, right: 2.0, top: 10, bottom: 6),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade800,
                       borderRadius: BorderRadius.circular(10.0),
@@ -298,9 +330,9 @@ class AppMetadataWidget extends StatelessWidget {
                                       effect: ShimmerEffect(
                                         baseColor: Colors.grey[700]!,
                                         highlightColor: Colors.grey[600]!,
-                                        duration: Duration(seconds: 1),
+                                        duration: const Duration(seconds: 1),
                                       ),
-                                      child: Bone.multiText(),
+                                      child: const Bone.multiText(),
                                     )
                                   : TextFormField(
                                       maxLines: null,
@@ -312,7 +344,8 @@ class AppMetadataWidget extends StatelessWidget {
                                       },
                                       controller: appDescriptionController,
                                       decoration: const InputDecoration(
-                                        contentPadding: EdgeInsets.only(top: 6, bottom: 2),
+                                        contentPadding:
+                                            EdgeInsets.only(top: 6, bottom: 2),
                                         isDense: true,
                                         border: InputBorder.none,
                                         hintText:
@@ -323,13 +356,16 @@ class AppMetadataWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                        appDescriptionController.text.isNotEmpty && appNameController.text.isNotEmpty
+                        appDescriptionController.text.isNotEmpty &&
+                                appNameController.text.isNotEmpty
                             ? Positioned(
                                 bottom: 2,
                                 right: 0,
                                 child: GestureDetector(
                                   onTap: () async {
-                                    await context.read<AddAppProvider>().generateDescription();
+                                    await context
+                                        .read<AddAppProvider>()
+                                        .generateDescription();
                                   },
                                   child: SvgPicture.asset(
                                     Assets.images.aiMagic.path,
@@ -337,7 +373,7 @@ class AppMetadataWidget extends StatelessWidget {
                                   ),
                                 ),
                               )
-                            : SizedBox.shrink(),
+                            : const SizedBox.shrink(),
                       ],
                     ),
                   ),
@@ -349,10 +385,11 @@ class AppMetadataWidget extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Text(
                             'App Pricing',
-                            style: TextStyle(color: Colors.grey.shade300, fontSize: 16),
+                            style: TextStyle(
+                                color: Colors.grey.shade300, fontSize: 16),
                           ),
                         )
-                      : SizedBox.shrink(),
+                      : const SizedBox.shrink(),
                   allowPaidApps
                       ? GestureDetector(
                           onTap: () {
@@ -360,24 +397,30 @@ class AppMetadataWidget extends StatelessWidget {
                               context: context,
                               isScrollControlled: true,
                               shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(16)),
                               ),
                               builder: (context) {
-                                return Consumer<AddAppProvider>(builder: (context, provider, child) {
+                                return Consumer<AddAppProvider>(
+                                    builder: (context, provider, child) {
                                   return Container(
                                     padding: const EdgeInsets.all(16.0),
-                                    height: MediaQuery.of(context).size.height * 0.36,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.36,
                                     child: SingleChildScrollView(
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           const SizedBox(
                                             height: 12,
                                           ),
                                           const Text(
                                             'App Pricing',
-                                            style: TextStyle(color: Colors.white, fontSize: 18),
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18),
                                           ),
                                           const SizedBox(
                                             height: 18,
@@ -387,30 +430,44 @@ class AppMetadataWidget extends StatelessWidget {
                                             children: ['Free', 'Paid'].map((e) {
                                               return InkWell(
                                                 onTap: () {
-                                                  provider.setIsPaid(e == 'Paid');
+                                                  provider
+                                                      .setIsPaid(e == 'Paid');
                                                   Navigator.pop(context);
                                                 },
                                                 child: Container(
-                                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 10),
                                                   child: Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
                                                     children: [
                                                       const SizedBox(
                                                         width: 6,
                                                       ),
                                                       Text(
                                                         e,
-                                                        style: TextStyle(color: Colors.grey.shade300, fontSize: 16),
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .grey.shade300,
+                                                            fontSize: 16),
                                                       ),
                                                       const Spacer(),
                                                       Checkbox(
-                                                        value: provider.isPaid == (e == 'Paid'),
+                                                        value:
+                                                            provider.isPaid ==
+                                                                (e == 'Paid'),
                                                         onChanged: (value) {
-                                                          provider.setIsPaid(e == 'Paid');
-                                                          Navigator.pop(context);
+                                                          provider.setIsPaid(
+                                                              e == 'Paid');
+                                                          Navigator.pop(
+                                                              context);
                                                         },
-                                                        side: BorderSide(color: Colors.grey.shade300),
-                                                        shape: const CircleBorder(),
+                                                        side: BorderSide(
+                                                            color: Colors
+                                                                .grey.shade300),
+                                                        shape:
+                                                            const CircleBorder(),
                                                       ),
                                                     ],
                                                   ),
@@ -427,8 +484,10 @@ class AppMetadataWidget extends StatelessWidget {
                             );
                           },
                           child: Container(
-                            margin: const EdgeInsets.only(left: 2.0, right: 2.0, top: 10, bottom: 6),
-                            padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 10.0),
+                            margin: const EdgeInsets.only(
+                                left: 2.0, right: 2.0, top: 10, bottom: 6),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 2.0, vertical: 10.0),
                             decoration: BoxDecoration(
                               color: Colors.grey.shade800,
                               borderRadius: BorderRadius.circular(10.0),
@@ -440,9 +499,14 @@ class AppMetadataWidget extends StatelessWidget {
                                   width: 12,
                                 ),
                                 Text(
-                                  (appPricing?.isNotEmpty == true ? appPricing : 'None Selected') ?? 'None Selected',
+                                  (appPricing?.isNotEmpty == true
+                                          ? appPricing
+                                          : 'None Selected') ??
+                                      'None Selected',
                                   style: TextStyle(
-                                      color: appPricing != null ? Colors.grey.shade100 : Colors.grey.shade400,
+                                      color: appPricing != null
+                                          ? Colors.grey.shade100
+                                          : Colors.grey.shade400,
                                       fontSize: 16),
                                 ),
                                 const Spacer(),
@@ -457,7 +521,7 @@ class AppMetadataWidget extends StatelessWidget {
                             ),
                           ),
                         )
-                      : SizedBox.shrink(),
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),

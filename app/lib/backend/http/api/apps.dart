@@ -19,7 +19,9 @@ Future<List<App>> retrieveApps() async {
     body: '',
     method: 'GET',
   );
-  if (response != null && response.statusCode == 200 && response.body.isNotEmpty) {
+  if (response != null &&
+      response.statusCode == 200 &&
+      response.body.isNotEmpty) {
     try {
       log('apps: ${response.body}');
       var apps = App.fromJsonList(jsonDecode(response.body));
@@ -80,7 +82,8 @@ Future<Map<String, String>> uploadAppThumbnail(File file) async {
     'POST',
     Uri.parse('${Env.apiBaseUrl}v1/app/thumbnails'),
   );
-  request.files.add(await http.MultipartFile.fromPath('file', file.path, filename: basename(file.path)));
+  request.files.add(await http.MultipartFile.fromPath('file', file.path,
+      filename: basename(file.path)));
   request.headers.addAll({'Authorization': await getAuthHeader()});
 
   try {
@@ -94,7 +97,8 @@ Future<Map<String, String>> uploadAppThumbnail(File file) async {
         'thumbnail_id': data['thumbnail_id'],
       };
     } else {
-      debugPrint('Failed to upload thumbnail. Status code: ${response.statusCode}');
+      debugPrint(
+          'Failed to upload thumbnail. Status code: ${response.statusCode}');
       return {};
     }
   } catch (e) {
@@ -185,12 +189,14 @@ Future<bool> isAppSetupCompleted(String? url) async {
   }
 }
 
-Future<(bool, String, String?)> submitAppServer(File file, Map<String, dynamic> appData) async {
+Future<(bool, String, String?)> submitAppServer(
+    File file, Map<String, dynamic> appData) async {
   var request = http.MultipartRequest(
     'POST',
     Uri.parse('${Env.apiBaseUrl}v1/apps'),
   );
-  request.files.add(await http.MultipartFile.fromPath('file', file.path, filename: basename(file.path)));
+  request.files.add(await http.MultipartFile.fromPath('file', file.path,
+      filename: basename(file.path)));
   request.headers.addAll({'Authorization': await getAuthHeader()});
   request.fields.addAll({'app_data': jsonEncode(appData)});
   debugPrint(jsonEncode(appData));
@@ -201,7 +207,7 @@ Future<(bool, String, String?)> submitAppServer(File file, Map<String, dynamic> 
     if (response.statusCode == 200) {
       var respData = jsonDecode(response.body);
       String? appId = respData['app_id'];
-      debugPrint('submitAppServer Response body: ${respData}');
+      debugPrint('submitAppServer Response body: $respData');
       return (true, '', appId);
     } else {
       debugPrint('Failed to submit app. Status code: ${response.statusCode}');
@@ -227,7 +233,8 @@ Future<bool> updateAppServer(File? file, Map<String, dynamic> appData) async {
     Uri.parse('${Env.apiBaseUrl}v1/apps/${appData['id']}'),
   );
   if (file != null) {
-    request.files.add(await http.MultipartFile.fromPath('file', file.path, filename: basename(file.path)));
+    request.files.add(await http.MultipartFile.fromPath('file', file.path,
+        filename: basename(file.path)));
   }
   request.headers.addAll({'Authorization': await getAuthHeader()});
   request.fields.addAll({'app_data': jsonEncode(appData)});
@@ -327,7 +334,8 @@ Future<List<NotificationScope>> getNotificationScopesServer() async {
 
 Future changeAppVisibilityServer(String appId, bool makePublic) async {
   var response = await makeApiCall(
-    url: '${Env.apiBaseUrl}v1/apps/$appId/change-visibility?private=${!makePublic}',
+    url:
+        '${Env.apiBaseUrl}v1/apps/$appId/change-visibility?private=${!makePublic}',
     headers: {},
     body: '',
     method: 'PATCH',
@@ -415,12 +423,14 @@ Future<String> getGenratedDescription(String name, String description) async {
   }
 }
 
-Future<Map> createPersonaApp(File file, Map<String, dynamic> personaData) async {
+Future<Map> createPersonaApp(
+    File file, Map<String, dynamic> personaData) async {
   var request = http.MultipartRequest(
     'POST',
     Uri.parse('${Env.apiBaseUrl}v1/personas'),
   );
-  request.files.add(await http.MultipartFile.fromPath('file', file.path, filename: basename(file.path)));
+  request.files.add(await http.MultipartFile.fromPath('file', file.path,
+      filename: basename(file.path)));
   request.headers.addAll({'Authorization': await getAuthHeader()});
   request.fields.addAll({'persona_data': jsonEncode(personaData)});
   print(jsonEncode(personaData));
@@ -429,7 +439,8 @@ Future<Map> createPersonaApp(File file, Map<String, dynamic> personaData) async 
     var response = await http.Response.fromStream(streamedResponse);
 
     if (response.statusCode == 200) {
-      debugPrint('createPersonaApp Response body: ${jsonDecode(response.body)}');
+      debugPrint(
+          'createPersonaApp Response body: ${jsonDecode(response.body)}');
       return jsonDecode(response.body);
     } else {
       debugPrint('Failed to submit app. Status code: ${response.statusCode}');
@@ -441,13 +452,15 @@ Future<Map> createPersonaApp(File file, Map<String, dynamic> personaData) async 
   }
 }
 
-Future<bool> updatePersonaApp(File? file, Map<String, dynamic> personaData) async {
+Future<bool> updatePersonaApp(
+    File? file, Map<String, dynamic> personaData) async {
   var request = http.MultipartRequest(
     'PATCH',
     Uri.parse('${Env.apiBaseUrl}v1/personas/${personaData['id']}'),
   );
   if (file != null) {
-    request.files.add(await http.MultipartFile.fromPath('file', file.path, filename: basename(file.path)));
+    request.files.add(await http.MultipartFile.fromPath('file', file.path,
+        filename: basename(file.path)));
   }
   request.headers.addAll({'Authorization': await getAuthHeader()});
   request.fields.addAll({'persona_data': jsonEncode(personaData)});
@@ -457,7 +470,8 @@ Future<bool> updatePersonaApp(File? file, Map<String, dynamic> personaData) asyn
     var response = await http.Response.fromStream(streamedResponse);
 
     if (response.statusCode == 200) {
-      debugPrint('updatePersonaApp Response body: ${jsonDecode(response.body)}');
+      debugPrint(
+          'updatePersonaApp Response body: ${jsonDecode(response.body)}');
       return true;
     } else {
       debugPrint('Failed to update app. Status code: ${response.statusCode}');
@@ -505,8 +519,10 @@ Future<Map?> getTwitterProfileData(String handle) async {
   }
 }
 
-Future<(bool, String?)> verifyTwitterOwnership(String username, String handle, String? personaId) async {
-  var url = '${Env.apiBaseUrl}v1/personas/twitter/verify-ownership?username=$username&handle=$handle';
+Future<(bool, String?)> verifyTwitterOwnership(
+    String username, String handle, String? personaId) async {
+  var url =
+      '${Env.apiBaseUrl}v1/personas/twitter/verify-ownership?username=$username&handle=$handle';
   if (personaId != null) {
     url += '&persona_id=$personaId';
   }
@@ -533,7 +549,8 @@ Future<(bool, String?)> verifyTwitterOwnership(String username, String handle, S
 
 Future<String> getPersonaInitialMessage(String username) async {
   var response = await makeApiCall(
-    url: '${Env.apiBaseUrl}v1/personas/twitter/initial-message?username=$username',
+    url:
+        '${Env.apiBaseUrl}v1/personas/twitter/initial-message?username=$username',
     headers: {},
     body: '',
     method: 'GET',

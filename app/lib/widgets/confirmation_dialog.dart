@@ -42,7 +42,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
 
   void _updateCheckboxValue(bool? value) {
     debugPrint("checked option ${value ?? false}");
-    debugPrint("checked ${_checkboxValue}");
+    debugPrint("checked $_checkboxValue");
     if (value != null) {
       setState(() {
         _checkboxValue = value;
@@ -57,7 +57,8 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
       return AlertDialog(
         backgroundColor: Colors.grey.shade900,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        contentPadding: const EdgeInsets.only(top: 20, left: 24, right: 24, bottom: 10),
+        contentPadding:
+            const EdgeInsets.only(top: 20, left: 24, right: 24, bottom: 10),
         title: Text(
           widget.title,
           style: const TextStyle(
@@ -87,9 +88,9 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                 Theme(
                   data: Theme.of(context).copyWith(
                     checkboxTheme: CheckboxThemeData(
-                      fillColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.selected)) {
+                      fillColor: WidgetStateProperty.resolveWith<Color>(
+                        (Set<WidgetState> states) {
+                          if (states.contains(WidgetState.selected)) {
                             return Colors.deepPurple;
                           }
                           return Colors.grey.shade700;
@@ -190,7 +191,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
             onPressed: widget.onCancel,
             isDestructiveAction: false,
             child: Text(
-              widget.cancelText ?? "Cancel", 
+              widget.cancelText ?? "Cancel",
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey.shade300,
@@ -201,7 +202,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
             onPressed: widget.onConfirm,
             isDefaultAction: true,
             child: Text(
-              widget.confirmText ?? "Confirm", 
+              widget.confirmText ?? "Confirm",
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.deepPurple,

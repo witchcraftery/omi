@@ -46,7 +46,7 @@ class _UpdatePersonaPageState extends State<UpdatePersonaPage> {
             context.read<PersonaProvider>().resetForm();
             if (widget.fromNewFlow) {
               Future.delayed(Duration.zero, () {
-                routeToPage(context, DeciderWidget(), replace: true);
+                routeToPage(context, const DeciderWidget(), replace: true);
               });
             } else {
               Future.delayed(Duration.zero, () {
@@ -59,7 +59,8 @@ class _UpdatePersonaPageState extends State<UpdatePersonaPage> {
           backgroundColor: Colors.black,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
-            title: const Text('Update Persona', style: TextStyle(color: Colors.white)),
+            title: const Text('Update Persona',
+                style: TextStyle(color: Colors.white)),
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -98,16 +99,20 @@ class _UpdatePersonaPageState extends State<UpdatePersonaPage> {
                           //         size: 40,
                           //         color: Colors.grey.shade400,
                           //       ),
-                          child: provider.selectedImage != null || provider.selectedImageUrl != null
+                          child: provider.selectedImage != null ||
+                                  provider.selectedImageUrl != null
                               ? (provider.selectedImageUrl == null
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(60),
-                                      child: Image.file(provider.selectedImage!, fit: BoxFit.cover))
+                                      child: Image.file(provider.selectedImage!,
+                                          fit: BoxFit.cover))
                                   : ClipRRect(
                                       borderRadius: BorderRadius.circular(60),
-                                      child: CachedNetworkImage(imageUrl: provider.selectedImageUrl!),
+                                      child: CachedNetworkImage(
+                                          imageUrl: provider.selectedImageUrl!),
                                     ))
-                              : const Icon(Icons.add_a_photo, color: Colors.grey, size: 32),
+                              : const Icon(Icons.add_a_photo,
+                                  color: Colors.grey, size: 32),
                         ),
                       ),
                     ),
@@ -126,12 +131,15 @@ class _UpdatePersonaPageState extends State<UpdatePersonaPage> {
                             padding: const EdgeInsets.only(left: 8.0),
                             child: Text(
                               'Persona Name',
-                              style: TextStyle(color: Colors.grey.shade300, fontSize: 16),
+                              style: TextStyle(
+                                  color: Colors.grey.shade300, fontSize: 16),
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                            margin: const EdgeInsets.only(left: 2.0, right: 2.0, top: 10, bottom: 6),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0, vertical: 6.0),
+                            margin: const EdgeInsets.only(
+                                left: 2.0, right: 2.0, top: 10, bottom: 6),
                             decoration: BoxDecoration(
                               color: Colors.grey.shade800,
                               borderRadius: BorderRadius.circular(10.0),
@@ -181,7 +189,8 @@ class _UpdatePersonaPageState extends State<UpdatePersonaPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 8.0, bottom: 12),
+                            padding:
+                                const EdgeInsets.only(left: 8.0, bottom: 12),
                             child: Text(
                               'Connected Knowledge Data',
                               style: TextStyle(
@@ -192,7 +201,8 @@ class _UpdatePersonaPageState extends State<UpdatePersonaPage> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
                             decoration: BoxDecoration(
                               color: Colors.grey[900],
                               borderRadius: BorderRadius.circular(12),
@@ -207,7 +217,8 @@ class _UpdatePersonaPageState extends State<UpdatePersonaPage> {
                                 const SizedBox(width: 12),
                                 Text(
                                   provider.hasTwitterConnection
-                                      ? (provider.twitterProfile['name'] ?? provider.twitterProfile['username'])
+                                      ? (provider.twitterProfile['name'] ??
+                                          provider.twitterProfile['username'])
                                       : 'Connect Twitter',
                                   style: const TextStyle(
                                     color: Colors.white,
@@ -218,22 +229,28 @@ class _UpdatePersonaPageState extends State<UpdatePersonaPage> {
                                 GestureDetector(
                                   onTap: () {
                                     if (!provider.hasTwitterConnection) {
-                                      routeToPage(context, const SocialHandleScreen());
+                                      routeToPage(
+                                          context, const SocialHandleScreen());
                                     } else {
                                       provider.disconnectTwitter();
                                     }
                                     provider.validateForm();
                                   },
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 6),
                                     decoration: BoxDecoration(
                                       color: Colors.grey[800],
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: Text(
-                                      provider.hasTwitterConnection ? 'Disconnect' : 'Connect',
+                                      provider.hasTwitterConnection
+                                          ? 'Disconnect'
+                                          : 'Connect',
                                       style: TextStyle(
-                                        color: provider.hasTwitterConnection ? Colors.red : Colors.white,
+                                        color: provider.hasTwitterConnection
+                                            ? Colors.red
+                                            : Colors.white,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -244,7 +261,8 @@ class _UpdatePersonaPageState extends State<UpdatePersonaPage> {
                           ),
                           const SizedBox(height: 12),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
                             decoration: BoxDecoration(
                               color: Colors.grey[900],
                               borderRadius: BorderRadius.circular(12),
@@ -275,15 +293,20 @@ class _UpdatePersonaPageState extends State<UpdatePersonaPage> {
                                     provider.validateForm();
                                   },
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 6),
                                     decoration: BoxDecoration(
                                       color: Colors.grey[800],
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: Text(
-                                      provider.hasOmiConnection ? 'Disconnect' : 'Connect',
+                                      provider.hasOmiConnection
+                                          ? 'Disconnect'
+                                          : 'Connect',
                                       style: TextStyle(
-                                        color: provider.hasOmiConnection ? Colors.red : Colors.white,
+                                        color: provider.hasOmiConnection
+                                            ? Colors.red
+                                            : Colors.white,
                                         fontSize: 12,
                                       ),
                                     ),

@@ -18,19 +18,25 @@ getDialog(
       ? [
           TextButton(
             onPressed: () => onCancel(),
-            child: Text(okButtonText, style: const TextStyle(color: Colors.white)),
+            child:
+                Text(okButtonText, style: const TextStyle(color: Colors.white)),
           )
         ]
       : [
           TextButton(
             onPressed: () => onCancel(),
-            child: Text(cancelButtonText, style: TextStyle(color: Colors.white)),
+            child: Text(cancelButtonText,
+                style: const TextStyle(color: Colors.white)),
           ),
           TextButton(
-              onPressed: () => onConfirm(), child: Text(okButtonText, style: const TextStyle(color: Colors.white))),
+              onPressed: () => onConfirm(),
+              child: Text(okButtonText,
+                  style: const TextStyle(color: Colors.white))),
         ];
   if (Platform.isIOS) {
-    return CupertinoAlertDialog(title: Text(title), content: Text(content), actions: actions);
+    return CupertinoAlertDialog(
+        title: Text(title), content: Text(content), actions: actions);
   }
-  return AlertDialog(title: Text(title), content: Text(content), actions: actions);
+  return AlertDialog(
+      title: Text(title), content: Text(content), actions: actions);
 }

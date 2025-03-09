@@ -19,10 +19,10 @@ class FirmwareUpdateDialog extends StatefulWidget {
   final List<String> steps;
 
   const FirmwareUpdateDialog({
-    Key? key,
+    super.key,
     required this.onUpdateStart,
     required this.steps,
-  }) : super(key: key);
+  });
 
   @override
   State<FirmwareUpdateDialog> createState() => _FirmwareUpdateDialogState();
@@ -93,7 +93,9 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
               Flexible(
                 child: SingleChildScrollView(
                   child: Column(
-                    children: updateSteps.map((step) => _buildStepItem(step)).toList(),
+                    children: updateSteps
+                        .map((step) => _buildStepItem(step))
+                        .toList(),
                   ),
                 ),
               ),
@@ -104,9 +106,9 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
                   Theme(
                     data: Theme.of(context).copyWith(
                       checkboxTheme: CheckboxThemeData(
-                        fillColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.selected)) {
+                        fillColor: WidgetStateProperty.resolveWith<Color>(
+                          (Set<WidgetState> states) {
+                            if (states.contains(WidgetState.selected)) {
                               return Colors.deepPurple;
                             }
                             return Colors.grey.shade700;
@@ -128,7 +130,7 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
                   ),
                   Expanded(
                     child: Text(
-                      hasUsbStep 
+                      hasUsbStep
                           ? "I've disconnected USB and understand the risks."
                           : "I confirm I want to update my device firmware.",
                       style: TextStyle(
@@ -143,23 +145,27 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
               const SizedBox(height: 16),
               // Update button (disabled until confirmed)
               TextButton(
-                onPressed: isConfirmed ? () {
-                  Navigator.of(context).pop();
-                  try {
-                    widget.onUpdateStart();
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Failed to start update: $e'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                } : null,
+                onPressed: isConfirmed
+                    ? () {
+                        Navigator.of(context).pop();
+                        try {
+                          widget.onUpdateStart();
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Failed to start update: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
+                    : null,
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: isConfirmed ? Colors.deepPurple : Colors.grey.shade800,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  backgroundColor:
+                      isConfirmed ? Colors.deepPurple : Colors.grey.shade800,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -179,7 +185,7 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
       ),
     );
   }
-  
+
   Widget _buildStepItem(FirmwareUpdateStep step) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),

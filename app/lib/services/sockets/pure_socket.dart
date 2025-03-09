@@ -96,7 +96,10 @@ class PureSocket implements IPureSocket {
   String url;
 
   PureSocket(this.url) {
-    _internetStatusListener = PureCore().internetConnection.onStatusChange.listen((InternetStatus status) {
+    _internetStatusListener = PureCore()
+        .internetConnection
+        .onStatusChange
+        .listen((InternetStatus status) {
       onInternetSatusChanged(status);
     });
   }
@@ -111,11 +114,12 @@ class PureSocket implements IPureSocket {
   }
 
   Future<bool> _connect() async {
-    if (_status == PureSocketStatus.connecting || _status == PureSocketStatus.connected) {
+    if (_status == PureSocketStatus.connecting ||
+        _status == PureSocketStatus.connected) {
       return false;
     }
 
-    debugPrint("request wss ${url}");
+    debugPrint("request wss $url");
     _channel = IOWebSocketChannel.connect(
       url,
       headers: {
@@ -202,12 +206,13 @@ class PureSocket implements IPureSocket {
   @override
   void onError(Object err, StackTrace trace) {
     _status = PureSocketStatus.disconnected;
-    print("Error: ${err}");
+    print("Error: $err");
     debugPrintStack(stackTrace: trace);
 
     _listener?.onError(err, trace);
 
-    CrashReporting.reportHandledCrash(err, trace, level: NonFatalExceptionLevel.error);
+    CrashReporting.reportHandledCrash(err, trace,
+        level: NonFatalExceptionLevel.error);
   }
 
   @override
@@ -232,7 +237,8 @@ class PureSocket implements IPureSocket {
     const double multiplier = 1.5;
     const int maxRetries = 8;
 
-    if (_status == PureSocketStatus.connecting || _status == PureSocketStatus.connected) {
+    if (_status == PureSocketStatus.connecting ||
+        _status == PureSocketStatus.connected) {
       debugPrint("[Socket] Can not reconnect, because socket is $_status");
       return;
     }
@@ -245,7 +251,8 @@ class PureSocket implements IPureSocket {
     }
 
     // retry
-    int waitInMilliseconds = pow(multiplier, _retries).toInt() * initialBackoffTimeMs;
+    int waitInMilliseconds =
+        pow(multiplier, _retries).toInt() * initialBackoffTimeMs;
     await Future.delayed(Duration(milliseconds: waitInMilliseconds));
     _retries++;
     if (_retries > maxRetries) {
@@ -262,7 +269,8 @@ class PureSocket implements IPureSocket {
     _internetStatus = status;
     switch (status) {
       case InternetStatus.connected:
-        if (_status == PureSocketStatus.connected || _status == PureSocketStatus.connecting) {
+        if (_status == PureSocketStatus.connected ||
+            _status == PureSocketStatus.connecting) {
           return;
         }
         _reconnect();

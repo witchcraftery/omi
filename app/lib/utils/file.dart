@@ -4,9 +4,10 @@ import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 
 class FileUtils {
-  static Future<File> saveAudioBytesToTempFile(List<List<int>> chunk, int timerStart) async {
+  static Future<File> saveAudioBytesToTempFile(
+      List<List<int>> chunk, int timerStart) async {
     final directory = await getTemporaryDirectory();
-    String filePath = '${directory.path}/audio_${timerStart}.bin';
+    String filePath = '${directory.path}/audio_$timerStart.bin';
     List<int> data = [];
     for (int i = 0; i < chunk.length; i++) {
       var frame = chunk[i];

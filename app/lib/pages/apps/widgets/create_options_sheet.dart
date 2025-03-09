@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:friend_private/pages/apps/add_app.dart';
-import 'package:friend_private/pages/persona/add_persona.dart';
-import 'package:friend_private/pages/persona/persona_profile.dart';
 import 'package:friend_private/pages/persona/persona_provider.dart';
 import 'package:friend_private/providers/home_provider.dart';
 import 'package:provider/provider.dart';
@@ -33,15 +31,24 @@ class CreateOptionsSheet extends StatelessWidget {
           const SizedBox(height: 24),
           Card(
             elevation: 0,
-            color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            color: Theme.of(context)
+                .colorScheme
+                .surfaceContainerHighest
+                .withOpacity(0.5),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               titleAlignment: ListTileTitleAlignment.center,
               leading: const Icon(Icons.apps, color: Colors.white),
-              title:
-                  Text('Create an App', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
-              subtitle: Text('Create and share your app', style: TextStyle(color: Colors.white.withOpacity(0.7))),
+              title: Text('Create an App',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: Colors.white)),
+              subtitle: Text('Create and share your app',
+                  style: TextStyle(color: Colors.white.withOpacity(0.7))),
               onTap: () {
                 Navigator.pop(context);
                 MixpanelManager().pageOpened('Submit App');
@@ -52,22 +59,33 @@ class CreateOptionsSheet extends StatelessWidget {
           const SizedBox(height: 12),
           Card(
             elevation: 0,
-            color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            color: Theme.of(context)
+                .colorScheme
+                .surfaceContainerHighest
+                .withOpacity(0.5),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               leading: const Icon(Icons.person_outline, color: Colors.white),
               titleAlignment: ListTileTitleAlignment.center,
               title: Text('Create my Clone',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
-              subtitle: Text('Create your digital clone', style: TextStyle(color: Colors.white.withOpacity(0.7))),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: Colors.white)),
+              subtitle: Text('Create your digital clone',
+                  style: TextStyle(color: Colors.white.withOpacity(0.7))),
               onTap: () {
                 Navigator.pop(context);
                 MixpanelManager().pageOpened('Create Persona');
                 // Set routing in provider and navigate to Persona Profile page
-                Provider.of<PersonaProvider>(context, listen: false).setRouting(PersonaProfileRouting.create_my_clone);
+                Provider.of<PersonaProvider>(context, listen: false)
+                    .setRouting(PersonaProfileRouting.create_my_clone);
                 Provider.of<HomeProvider>(context, listen: false).setIndex(3);
-                Provider.of<HomeProvider>(context, listen: false).onSelectedIndexChanged!(3);
+                Provider.of<HomeProvider>(context, listen: false)
+                    .onSelectedIndexChanged!(3);
               },
             ),
           ),

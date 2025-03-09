@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/schema/app.dart';
 import 'package:friend_private/pages/apps/update_app.dart';
-import 'package:friend_private/pages/persona/persona_profile.dart';
 import 'package:friend_private/pages/persona/persona_provider.dart';
 import 'package:friend_private/providers/home_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:friend_private/pages/persona/update_persona.dart';
 import 'package:friend_private/providers/app_provider.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/dialog.dart';
-import 'package:provider/provider.dart';
 
 class ShowAppOptionsSheet extends StatelessWidget {
   final App app;
@@ -20,7 +17,8 @@ class ShowAppOptionsSheet extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16), topRight: Radius.circular(16)),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Consumer<AppProvider>(builder: (context, provider, child) {
@@ -46,8 +44,13 @@ class ShowAppOptionsSheet extends StatelessWidget {
               ),
               child: ListTile(
                 title: Text(
-                  app.isNotPersona() ? 'Keep App Public' : 'Keep Persona Public',
-                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+                  app.isNotPersona()
+                      ? 'Keep App Public'
+                      : 'Keep Persona Public',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
                 ),
                 trailing: Switch(
                   value: provider.appPublicToggled,
@@ -64,7 +67,9 @@ class ShowAppOptionsSheet extends StatelessWidget {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
-                          app.isNotPersona() ? 'Make App Public?' : 'Make Persona Public?',
+                          app.isNotPersona()
+                              ? 'Make App Public?'
+                              : 'Make Persona Public?',
                           'If you make the ${app.isNotPersona() ? 'app' : 'persona'} public, it can be used by everyone',
                           okButtonText: 'Confirm',
                         ),
@@ -81,7 +86,9 @@ class ShowAppOptionsSheet extends StatelessWidget {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
-                          app.isNotPersona() ? 'Make App Private?' : 'Make Persona Private?',
+                          app.isNotPersona()
+                              ? 'Make App Private?'
+                              : 'Make Persona Private?',
                           'If you make the ${app.isNotPersona() ? 'app' : 'persona'} private now, it will stop working for everyone and will be visible only to you',
                           okButtonText: 'Confirm',
                         ),
@@ -98,7 +105,9 @@ class ShowAppOptionsSheet extends StatelessWidget {
               child: Column(
                 children: [
                   ListTile(
-                    title: Text(app.isNotPersona() ? 'Update App Details' : 'Update Persona Details'),
+                    title: Text(app.isNotPersona()
+                        ? 'Update App Details'
+                        : 'Update Persona Details'),
                     leading: const Icon(Icons.edit),
                     onTap: () {
                       Navigator.pop(context);
@@ -109,13 +118,16 @@ class ShowAppOptionsSheet extends StatelessWidget {
                         // Set routing in provider and navigate to Persona Profile page
                         Provider.of<PersonaProvider>(context, listen: false)
                             .setRouting(PersonaProfileRouting.create_my_clone);
-                        Provider.of<HomeProvider>(context, listen: false).setIndex(3);
-                        Provider.of<HomeProvider>(context, listen: false).onSelectedIndexChanged!(3);
+                        Provider.of<HomeProvider>(context, listen: false)
+                            .setIndex(3);
+                        Provider.of<HomeProvider>(context, listen: false)
+                            .onSelectedIndexChanged!(3);
                       }
                     },
                   ),
                   ListTile(
-                    title: Text('Delete ${app.isNotPersona() ? 'App' : 'Persona'}'),
+                    title: Text(
+                        'Delete ${app.isNotPersona() ? 'App' : 'Persona'}'),
                     leading: const Icon(
                       Icons.delete,
                     ),

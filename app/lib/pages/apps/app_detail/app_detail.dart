@@ -28,7 +28,6 @@ import 'dart:async';
 
 import '../../../backend/schema/app.dart';
 import '../widgets/show_app_options_sheet.dart';
-import 'widgets/app_analytics_widget.dart';
 import 'widgets/info_card_widget.dart';
 
 import 'package:timeago/timeago.dart' as timeago;
@@ -53,7 +52,8 @@ class _AppDetailPageState extends State<AppDetailPage> {
 
   checkSetupCompleted() {
     // TODO: move check to backend
-    isAppSetupCompleted(app.externalIntegration!.setupCompletedUrl).then((value) {
+    isAppSetupCompleted(app.externalIntegration!.setupCompletedUrl)
+        .then((value) {
       if (mounted) {
         setState(() => setupCompleted = value);
       }
@@ -69,10 +69,12 @@ class _AppDetailPageState extends State<AppDetailPage> {
   @override
   void initState() {
     app = widget.app;
-    showInstallAppConfirmation = SharedPreferencesUtil().showInstallAppConfirmation;
+    showInstallAppConfirmation =
+        SharedPreferencesUtil().showInstallAppConfirmation;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Automatically open app home page if conditions are met
-      if (app.enabled && app.externalIntegration?.appHomeUrl?.isNotEmpty == true) {
+      if (app.enabled &&
+          app.externalIntegration?.appHomeUrl?.isNotEmpty == true) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -97,8 +99,10 @@ class _AppDetailPageState extends State<AppDetailPage> {
     });
     if (app.worksExternally()) {
       if (app.externalIntegration!.setupInstructionsFilePath.isNotEmpty) {
-        if (app.externalIntegration!.setupInstructionsFilePath.contains('raw.githubusercontent.com')) {
-          getAppMarkdown(app.externalIntegration!.setupInstructionsFilePath).then((value) {
+        if (app.externalIntegration!.setupInstructionsFilePath
+            .contains('raw.githubusercontent.com')) {
+          getAppMarkdown(app.externalIntegration!.setupInstructionsFilePath)
+              .then((value) {
             value = value.replaceAll(
               '](assets/',
               '](https://raw.githubusercontent.com/BasedHardware/Omi/main/plugins/instructions/${app.id}/assets/',
@@ -121,7 +125,8 @@ class _AppDetailPageState extends State<AppDetailPage> {
 
   Future _checkPaymentStatus(String appId) async {
     MixpanelManager().appPurchaseStarted(appId);
-    _paymentCheckTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+    _paymentCheckTimer =
+        Timer.periodic(const Duration(seconds: 5), (timer) async {
       var prefs = SharedPreferencesUtil();
       if (mounted) {
         setState(() => appLoading = true);
@@ -152,8 +157,10 @@ class _AppDetailPageState extends State<AppDetailPage> {
   @override
   Widget build(BuildContext context) {
     bool isIntegration = app.worksExternally();
-    bool hasSetupInstructions = isIntegration && app.externalIntegration?.setupInstructionsFilePath.isNotEmpty == true;
-    bool hasAuthSteps = isIntegration && app.externalIntegration?.authSteps.isNotEmpty == true;
+    bool hasSetupInstructions = isIntegration &&
+        app.externalIntegration?.setupInstructionsFilePath.isNotEmpty == true;
+    bool hasAuthSteps =
+        isIntegration && app.externalIntegration?.authSteps.isNotEmpty == true;
     int stepsCount = app.externalIntegration?.authSteps.length ?? 0;
     return Scaffold(
       appBar: AppBar(
@@ -166,12 +173,15 @@ class _AppDetailPageState extends State<AppDetailPage> {
               onTap: () async {
                 Navigator.pop(context);
                 context.read<HomeProvider>().setIndex(1);
-                if (context.read<HomeProvider>().onSelectedIndexChanged != null) {
+                if (context.read<HomeProvider>().onSelectedIndexChanged !=
+                    null) {
                   context.read<HomeProvider>().onSelectedIndexChanged!(1);
                 }
                 var appId = app.id;
-                var appProvider = Provider.of<AppProvider>(context, listen: false);
-                var messageProvider = Provider.of<MessageProvider>(context, listen: false);
+                var appProvider =
+                    Provider.of<AppProvider>(context, listen: false);
+                var messageProvider =
+                    Provider.of<MessageProvider>(context, listen: false);
                 App? selectedApp;
                 if (appId.isNotEmpty) {
                   selectedApp = await appProvider.getAppFromId(appId);
@@ -185,7 +195,8 @@ class _AppDetailPageState extends State<AppDetailPage> {
             ),
             const SizedBox(width: 24),
           ],
-          if (app.enabled && app.externalIntegration?.appHomeUrl?.isNotEmpty == true) ...[
+          if (app.enabled &&
+              app.externalIntegration?.appHomeUrl?.isNotEmpty == true) ...[
             GestureDetector(
               child: const Icon(
                 Icons.open_in_browser_rounded,
@@ -207,7 +218,8 @@ class _AppDetailPageState extends State<AppDetailPage> {
               : GestureDetector(
                   child: const Icon(Icons.share),
                   onTap: () {
-                    MixpanelManager().track('App Shared', properties: {'appId': app.id});
+                    MixpanelManager()
+                        .track('App Shared', properties: {'appId': app.id});
                     if (app.isNotPersona()) {
                       Share.share(
                         'Check out this app on Omi AI: ${app.name} by ${app.author} \n\n${app.description.decodeString}\n\n\nhttps://h.omi.me/apps/${app.id}',
@@ -274,11 +286,14 @@ class _AppDetailPageState extends State<AppDetailPage> {
                       decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(8),
-                        image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.cover),
                       ),
                     ),
-                    placeholder: (context, url) => const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                   const SizedBox(width: 20),
                   Column(
@@ -289,13 +304,15 @@ class _AppDetailPageState extends State<AppDetailPage> {
                         width: MediaQuery.of(context).size.width * 0.6,
                         child: Text(
                           app.name.decodeString,
-                          style: const TextStyle(color: Colors.white, fontSize: 20),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 20),
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         app.author,
-                        style: const TextStyle(color: Colors.grey, fontSize: 14),
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 14),
                       ),
                     ],
                   ),
@@ -338,8 +355,11 @@ class _AppDetailPageState extends State<AppDetailPage> {
                                   itemCount: 1,
                                   itemSize: 20,
                                   tapOnlyMode: false,
-                                  itemPadding: const EdgeInsets.symmetric(horizontal: 0),
-                                  itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.deepPurple),
+                                  itemPadding:
+                                      const EdgeInsets.symmetric(horizontal: 0),
+                                  itemBuilder: (context, _) => const Icon(
+                                      Icons.star,
+                                      color: Colors.deepPurple),
                                   maxRating: 5.0,
                                   onRatingUpdate: (rating) {},
                                 ),
@@ -428,12 +448,15 @@ class _AppDetailPageState extends State<AppDetailPage> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: AnimatedLoadingButton(
-                                  width: MediaQuery.of(context).size.width * 0.9,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
                                   text: "Subscribe",
                                   onPressed: () async {
-                                    if (app.paymentLink != null && app.paymentLink!.isNotEmpty) {
+                                    if (app.paymentLink != null &&
+                                        app.paymentLink!.isNotEmpty) {
                                       _checkPaymentStatus(app.id);
-                                      await launchUrl(Uri.parse(app.paymentLink!));
+                                      await launchUrl(
+                                          Uri.parse(app.paymentLink!));
                                     } else {
                                       await _toggleApp(app.id, true);
                                     }
@@ -446,24 +469,31 @@ class _AppDetailPageState extends State<AppDetailPage> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: AnimatedLoadingButton(
-                                  width: MediaQuery.of(context).size.width * 0.9,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
                                   text: 'Install App',
                                   onPressed: () async {
                                     if (app.worksExternally()) {
                                       showDialog(
                                         context: context,
                                         builder: (ctx) {
-                                          return StatefulBuilder(builder: (ctx, setState) {
+                                          return StatefulBuilder(
+                                              builder: (ctx, setState) {
                                             return ConfirmationDialog(
                                               title: 'Data Access Notice',
                                               description:
                                                   'This app will access your data. Omi AI is not responsible for how your data is used, modified, or deleted by this app',
-                                              checkboxText: "Don't show it again",
-                                              checkboxValue: !showInstallAppConfirmation,
+                                              checkboxText:
+                                                  "Don't show it again",
+                                              checkboxValue:
+                                                  !showInstallAppConfirmation,
                                               onCheckboxChanged: (value) {
                                                 setState(() {
-                                                  showInstallAppConfirmation = !value;
-                                                  SharedPreferencesUtil().showInstallAppConfirmation = !value;
+                                                  showInstallAppConfirmation =
+                                                      !value;
+                                                  SharedPreferencesUtil()
+                                                          .showInstallAppConfirmation =
+                                                      !value;
                                                 });
                                               },
                                               onConfirm: () {
@@ -486,7 +516,8 @@ class _AppDetailPageState extends State<AppDetailPage> {
                               ),
                             )),
 
-              (app.isUnderReview() || app.private) && !app.isOwner(SharedPreferencesUtil().uid)
+              (app.isUnderReview() || app.private) &&
+                      !app.isOwner(SharedPreferencesUtil().uid)
                   ? Column(
                       children: [
                         const SizedBox(
@@ -512,7 +543,9 @@ class _AppDetailPageState extends State<AppDetailPage> {
                       ],
                     )
                   : const SizedBox.shrink(),
-              app.isUnderReview() && !app.private && app.isOwner(SharedPreferencesUtil().uid)
+              app.isUnderReview() &&
+                      !app.private &&
+                      app.isOwner(SharedPreferencesUtil().uid)
                   ? Column(
                       children: [
                         const SizedBox(
@@ -568,7 +601,8 @@ class _AppDetailPageState extends State<AppDetailPage> {
               const SizedBox(height: 16),
               (hasAuthSteps && stepsCount > 0)
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 16),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -581,7 +615,8 @@ class _AppDetailPageState extends State<AppDetailPage> {
                                   padding: EdgeInsets.only(right: 12.0),
                                   child: Text(
                                     '✅',
-                                    style: TextStyle(color: Colors.grey, fontSize: 18),
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 18),
                                   ),
                                 )
                               : const SizedBox(),
@@ -590,8 +625,11 @@ class _AppDetailPageState extends State<AppDetailPage> {
                     )
                   : const SizedBox.shrink(),
               ...(hasAuthSteps
-                  ? app.externalIntegration!.authSteps.mapIndexed<Widget>((i, step) {
-                      String title = stepsCount == 0 ? step.name : '${i + 1}. ${step.name}';
+                  ? app.externalIntegration!.authSteps
+                      .mapIndexed<Widget>((i, step) {
+                      String title = stepsCount == 0
+                          ? step.name
+                          : '${i + 1}. ${step.name}';
                       // String title = stepsCount == 1 ? step.name : '${i + 1}. ${step.name}';
                       return ListTile(
                           title: Text(
@@ -599,12 +637,14 @@ class _AppDetailPageState extends State<AppDetailPage> {
                             style: const TextStyle(fontSize: 17),
                           ),
                           onTap: () async {
-                            await launchUrl(Uri.parse("${step.url}?uid=${SharedPreferencesUtil().uid}"));
+                            await launchUrl(Uri.parse(
+                                "${step.url}?uid=${SharedPreferencesUtil().uid}"));
                             checkSetupCompleted();
                           },
                           trailing: const Padding(
                             padding: EdgeInsets.only(right: 12.0),
-                            child: Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
+                            child: Icon(Icons.arrow_forward_ios,
+                                size: 20, color: Colors.grey),
                           ));
                     }).toList()
                   : <Widget>[const SizedBox.shrink()]),
@@ -616,14 +656,22 @@ class _AppDetailPageState extends State<AppDetailPage> {
                               .contains('raw.githubusercontent.com')) {
                             await routeToPage(
                               context,
-                              MarkdownViewer(title: 'Setup Instructions', markdown: instructionsMarkdown ?? ''),
+                              MarkdownViewer(
+                                  title: 'Setup Instructions',
+                                  markdown: instructionsMarkdown ?? ''),
                             );
                           } else {
                             if (app.externalIntegration!.isInstructionsUrl) {
-                              await launchUrl(Uri.parse(app.externalIntegration!.setupInstructionsFilePath));
+                              await launchUrl(Uri.parse(app.externalIntegration!
+                                  .setupInstructionsFilePath));
                             } else {
-                              var m = app.externalIntegration!.setupInstructionsFilePath;
-                              routeToPage(context, MarkdownViewer(title: 'Setup Instructions', markdown: m));
+                              var m = app.externalIntegration!
+                                  .setupInstructionsFilePath;
+                              routeToPage(
+                                  context,
+                                  MarkdownViewer(
+                                      title: 'Setup Instructions',
+                                      markdown: m));
                             }
                           }
                         }
@@ -631,11 +679,13 @@ class _AppDetailPageState extends State<AppDetailPage> {
                       },
                       trailing: const Padding(
                         padding: EdgeInsets.only(right: 12.0),
-                        child: Icon(Icons.arrow_forward_ios, size: 20, color: Colors.grey),
+                        child: Icon(Icons.arrow_forward_ios,
+                            size: 20, color: Colors.grey),
                       ),
                       title: const Text(
                         'Integration Instructions',
-                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 18),
                       ),
                     )
                   : const SizedBox.shrink(),
@@ -679,7 +729,9 @@ class _AppDetailPageState extends State<AppDetailPage> {
                             clipBehavior: Clip.hardEdge,
                             margin: EdgeInsets.only(
                               left: index == 0 ? 16 : 8,
-                              right: index == app.thumbnailUrls.length - 1 ? 16 : 8,
+                              right: index == app.thumbnailUrls.length - 1
+                                  ? 16
+                                  : 8,
                             ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
@@ -701,7 +753,9 @@ class _AppDetailPageState extends State<AppDetailPage> {
                               height: height,
                               margin: EdgeInsets.only(
                                 left: index == 0 ? 16 : 8,
-                                right: index == app.thumbnailUrls.length - 1 ? 16 : 8,
+                                right: index == app.thumbnailUrls.length - 1
+                                    ? 16
+                                    : 8,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.black,
@@ -714,7 +768,9 @@ class _AppDetailPageState extends State<AppDetailPage> {
                             height: height,
                             margin: EdgeInsets.only(
                               left: index == 0 ? 16 : 8,
-                              right: index == app.thumbnailUrls.length - 1 ? 16 : 8,
+                              right: index == app.thumbnailUrls.length - 1
+                                  ? 16
+                                  : 8,
                             ),
                             decoration: BoxDecoration(
                               color: Colors.grey[900],
@@ -735,7 +791,8 @@ class _AppDetailPageState extends State<AppDetailPage> {
                     routeToPage(
                         context,
                         MarkdownViewer(
-                            title: 'About the ${app.isNotPersona() ? 'App' : 'Persona'}',
+                            title:
+                                'About the ${app.isNotPersona() ? 'App' : 'Persona'}',
                             markdown: app.description.decodeString));
                   }
                 },
@@ -743,7 +800,8 @@ class _AppDetailPageState extends State<AppDetailPage> {
                 description: app.description,
                 showChips: true,
                 capabilityChips: app
-                    .getCapabilitiesFromIds(context.read<AddAppProvider>().capabilities)
+                    .getCapabilitiesFromIds(
+                        context.read<AddAppProvider>().capabilities)
                     .map((e) => e.title)
                     .toList(),
                 connectionChips: app.getConnectedAccountNames(),
@@ -752,11 +810,15 @@ class _AppDetailPageState extends State<AppDetailPage> {
               app.conversationPrompt != null
                   ? InfoCardWidget(
                       onTap: () {
-                        if (app.conversationPrompt!.decodeString.characters.length > 200) {
+                        if (app.conversationPrompt!.decodeString.characters
+                                .length >
+                            200) {
                           routeToPage(
                               context,
                               MarkdownViewer(
-                                  title: 'Conversation Prompt', markdown: app.conversationPrompt!.decodeString));
+                                  title: 'Conversation Prompt',
+                                  markdown:
+                                      app.conversationPrompt!.decodeString));
                         }
                       },
                       title: 'Conversation Prompt',
@@ -768,9 +830,13 @@ class _AppDetailPageState extends State<AppDetailPage> {
               app.chatPrompt != null
                   ? InfoCardWidget(
                       onTap: () {
-                        if (app.chatPrompt!.decodeString.characters.length > 200) {
-                          routeToPage(context,
-                              MarkdownViewer(title: 'Chat Personality', markdown: app.chatPrompt!.decodeString));
+                        if (app.chatPrompt!.decodeString.characters.length >
+                            200) {
+                          routeToPage(
+                              context,
+                              MarkdownViewer(
+                                  title: 'Chat Personality',
+                                  markdown: app.chatPrompt!.decodeString));
                         }
                       },
                       title: 'Chat Personality',
@@ -787,7 +853,8 @@ class _AppDetailPageState extends State<AppDetailPage> {
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16.0),
-                  margin: const EdgeInsets.only(left: 8.0, right: 8.0, top: 12, bottom: 6),
+                  margin: const EdgeInsets.only(
+                      left: 8.0, right: 8.0, top: 12, bottom: 6),
                   decoration: BoxDecoration(
                     color: Colors.grey.shade900,
                     borderRadius: BorderRadius.circular(16.0),
@@ -798,7 +865,9 @@ class _AppDetailPageState extends State<AppDetailPage> {
                     children: [
                       Row(
                         children: [
-                          const Text('Ratings & Reviews', style: TextStyle(color: Colors.white, fontSize: 18)),
+                          const Text('Ratings & Reviews',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18)),
                           const Spacer(),
                           app.reviews.isNotEmpty
                               ? const Icon(
@@ -812,7 +881,8 @@ class _AppDetailPageState extends State<AppDetailPage> {
                       Row(
                         children: [
                           Text(app.getRatingAvg() ?? '0.0',
-                              style: const TextStyle(fontSize: 38, fontWeight: FontWeight.bold)),
+                              style: const TextStyle(
+                                  fontSize: 38, fontWeight: FontWeight.bold)),
                           const Spacer(),
                           Column(
                             children: [
@@ -826,28 +896,37 @@ class _AppDetailPageState extends State<AppDetailPage> {
                                   itemCount: 5,
                                   itemSize: 20,
                                   tapOnlyMode: false,
-                                  itemPadding: const EdgeInsets.symmetric(horizontal: 0),
-                                  itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.deepPurple),
+                                  itemPadding:
+                                      const EdgeInsets.symmetric(horizontal: 0),
+                                  itemBuilder: (context, _) => const Icon(
+                                      Icons.star,
+                                      color: Colors.deepPurple),
                                   maxRating: 5.0,
                                   onRatingUpdate: (rating) {},
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              Text(app.ratingCount <= 0 ? "no ratings" : "${app.ratingCount}+ ratings"),
+                              Text(app.ratingCount <= 0
+                                  ? "no ratings"
+                                  : "${app.ratingCount}+ ratings"),
                             ],
                           ),
                         ],
                       ),
                       const SizedBox(height: 16),
                       RecentReviewsSection(
-                        reviews: app.reviews.sorted((a, b) => b.ratedAt.compareTo(a.ratedAt)).take(3).toList(),
+                        reviews: app.reviews
+                            .sorted((a, b) => b.ratedAt.compareTo(a.ratedAt))
+                            .take(3)
+                            .toList(),
                         appAuthor: app.author,
                       )
                     ],
                   ),
                 ),
               ),
-              !app.isOwner(SharedPreferencesUtil().uid) && (app.enabled || app.userReview != null)
+              !app.isOwner(SharedPreferencesUtil().uid) &&
+                      (app.enabled || app.userReview != null)
                   ? AddReviewWidget(app: app)
                   : const SizedBox.shrink(),
               // isIntegration ? const SizedBox(height: 16) : const SizedBox.shrink(),
@@ -919,7 +998,8 @@ class _AppDetailPageState extends State<AppDetailPage> {
 class RecentReviewsSection extends StatelessWidget {
   final List<AppReview> reviews;
   final String appAuthor;
-  const RecentReviewsSection({super.key, required this.reviews, required this.appAuthor});
+  const RecentReviewsSection(
+      {super.key, required this.reviews, required this.appAuthor});
 
   @override
   Widget build(BuildContext context) {
@@ -954,7 +1034,8 @@ class RecentReviewsSection extends StatelessWidget {
                     ? MediaQuery.of(context).size.width * 0.84
                     : MediaQuery.of(context).size.width * 0.78,
                 padding: const EdgeInsets.all(16.0),
-                margin: const EdgeInsets.only(left: 8.0, right: 8.0, top: 0, bottom: 6),
+                margin: const EdgeInsets.only(
+                    left: 8.0, right: 8.0, top: 0, bottom: 6),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 25, 24, 24),
                   borderRadius: BorderRadius.circular(16.0),
@@ -974,8 +1055,10 @@ class RecentReviewsSection extends StatelessWidget {
                           itemCount: 5,
                           itemSize: 20,
                           tapOnlyMode: false,
-                          itemPadding: const EdgeInsets.symmetric(horizontal: 0),
-                          itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.deepPurple),
+                          itemPadding:
+                              const EdgeInsets.symmetric(horizontal: 0),
+                          itemBuilder: (context, _) =>
+                              const Icon(Icons.star, color: Colors.deepPurple),
                           maxRating: 5.0,
                           onRatingUpdate: (rating) {},
                         ),
@@ -984,7 +1067,9 @@ class RecentReviewsSection extends StatelessWidget {
                         ),
                         Text(
                           timeago.format(reviews[index].ratedAt),
-                          style: const TextStyle(color: Color.fromARGB(255, 176, 174, 174), fontSize: 12),
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 176, 174, 174),
+                              fontSize: 12),
                         ),
                       ],
                     ),
@@ -1015,14 +1100,18 @@ class RecentReviewsSection extends StatelessWidget {
                                 children: [
                                   Text(
                                     'Response from $appAuthor',
-                                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 14),
                                   ),
                                   const SizedBox(
                                     width: 8,
                                   ),
                                   Text(
                                     timeago.format(reviews[index].ratedAt),
-                                    style: const TextStyle(color: Color.fromARGB(255, 176, 174, 174), fontSize: 12),
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 176, 174, 174),
+                                        fontSize: 12),
                                   ),
                                 ],
                               ),

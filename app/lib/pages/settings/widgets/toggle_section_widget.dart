@@ -38,7 +38,8 @@ class _ToggleSectionWidgetState extends State<ToggleSectionWidget> {
         ListTile(
           title: Text(
             widget.sectionTitle,
-            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+            style: const TextStyle(
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
           ),
           contentPadding: EdgeInsets.zero,
           subtitle: Text(widget.sectionDescription),
@@ -55,7 +56,9 @@ class _ToggleSectionWidgetState extends State<ToggleSectionWidget> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: widget.options,
           ),
-          crossFadeState: widget.isSectionEnabled ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          crossFadeState: widget.isSectionEnabled
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
           duration: const Duration(milliseconds: 300),
         ),
       ],

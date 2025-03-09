@@ -15,7 +15,6 @@ import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/device_widget.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
-import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'percentage_bar_progress.dart';
@@ -29,7 +28,8 @@ class SpeechProfilePage extends StatefulWidget {
   State<SpeechProfilePage> createState() => _SpeechProfilePageState();
 }
 
-class _SpeechProfilePageState extends State<SpeechProfilePage> with TickerProviderStateMixin {
+class _SpeechProfilePageState extends State<SpeechProfilePage>
+    with TickerProviderStateMixin {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -42,7 +42,8 @@ class _SpeechProfilePageState extends State<SpeechProfilePage> with TickerProvid
 
   // TODO: use connection directly
   Future<BleAudioCodec> _getAudioCodec(String deviceId) async {
-    var connection = await ServiceManager.instance().device.ensureConnection(deviceId);
+    var connection =
+        await ServiceManager.instance().device.ensureConnection(deviceId);
     if (connection == null) {
       return BleAudioCodec.pcm8;
     }
@@ -76,8 +77,11 @@ class _SpeechProfilePageState extends State<SpeechProfilePage> with TickerProvid
       debugPrint("restartDeviceRecording $mounted");
       if (mounted) {
         Provider.of<CaptureProvider>(context, listen: false).clearTranscripts();
-        Provider.of<CaptureProvider>(context, listen: false).streamDeviceRecording(
-          device: Provider.of<SpeechProfileProvider>(context, listen: false).deviceProvider?.connectedDevice,
+        Provider.of<CaptureProvider>(context, listen: false)
+            .streamDeviceRecording(
+          device: Provider.of<SpeechProfileProvider>(context, listen: false)
+              .deviceProvider
+              ?.connectedDevice,
         );
       }
     }
@@ -85,7 +89,8 @@ class _SpeechProfilePageState extends State<SpeechProfilePage> with TickerProvid
     Future stopDeviceRecording() async {
       debugPrint("stopDeviceRecording $mounted");
       if (mounted) {
-        await Provider.of<CaptureProvider>(context, listen: false).stopStreamDeviceRecording();
+        await Provider.of<CaptureProvider>(context, listen: false)
+            .stopStreamDeviceRecording();
       }
     }
 
@@ -101,7 +106,8 @@ class _SpeechProfilePageState extends State<SpeechProfilePage> with TickerProvid
           });
         }
       },
-      child: Consumer2<SpeechProfileProvider, CaptureProvider>(builder: (context, provider, _, child) {
+      child: Consumer2<SpeechProfileProvider, CaptureProvider>(
+          builder: (context, provider, _, child) {
         return MessageListener<SpeechProfileProvider>(
           showInfo: (info) {
             if (info == 'SCROLL_DOWN') {
@@ -194,11 +200,14 @@ class _SpeechProfilePageState extends State<SpeechProfilePage> with TickerProvid
                         ))
                     : TextButton(
                         onPressed: () {
-                          routeToPage(context, const HomePageWrapper(), replace: true);
+                          routeToPage(context, const HomePageWrapper(),
+                              replace: true);
                         },
                         child: const Text(
                           'Skip',
-                          style: TextStyle(color: Colors.white, decoration: TextDecoration.underline),
+                          style: TextStyle(
+                              color: Colors.white,
+                              decoration: TextDecoration.underline),
                         ),
                       ),
               ],
@@ -245,7 +254,8 @@ class _SpeechProfilePageState extends State<SpeechProfilePage> with TickerProvid
                               ),
                               SizedBox(height: 20),
                               Text("Note: This only works in English",
-                                  style: TextStyle(color: Colors.white, fontSize: 16)),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16)),
                             ],
                           )
                         : provider.text.isEmpty
@@ -253,7 +263,10 @@ class _SpeechProfilePageState extends State<SpeechProfilePage> with TickerProvid
                                 ? const SizedBox()
                                 : const Text(
                                     "Introduce\nyourself",
-                                    style: TextStyle(color: Colors.white, fontSize: 24, height: 1.4),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                        height: 1.4),
                                     textAlign: TextAlign.center,
                                   ))
                             : Padding(
@@ -262,12 +275,18 @@ class _SpeechProfilePageState extends State<SpeechProfilePage> with TickerProvid
                                   builder: (context, constraints) {
                                     return ShaderMask(
                                       shaderCallback: (bounds) {
-                                        if (provider.text.split(' ').length < 10) {
-                                          return const LinearGradient(colors: [Colors.white, Colors.white])
-                                              .createShader(bounds);
+                                        if (provider.text.split(' ').length <
+                                            10) {
+                                          return const LinearGradient(colors: [
+                                            Colors.white,
+                                            Colors.white
+                                          ]).createShader(bounds);
                                         }
                                         return const LinearGradient(
-                                          colors: [Colors.transparent, Colors.white],
+                                          colors: [
+                                            Colors.transparent,
+                                            Colors.white
+                                          ],
                                           stops: [0.0, 0.5],
                                           begin: Alignment.topCenter,
                                           end: Alignment.bottomCenter,
@@ -279,7 +298,8 @@ class _SpeechProfilePageState extends State<SpeechProfilePage> with TickerProvid
                                         child: ListView(
                                           controller: _scrollController,
                                           shrinkWrap: true,
-                                          physics: const NeverScrollableScrollPhysics(),
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
                                           children: [
                                             Text(
                                               provider.text,
@@ -316,7 +336,8 @@ class _SpeechProfilePageState extends State<SpeechProfilePage> with TickerProvid
                                       onPressed: () async {
                                         BleAudioCodec codec;
                                         try {
-                                          codec = await _getAudioCodec(provider.device!.id);
+                                          codec = await _getAudioCodec(
+                                              provider.device!.id);
                                         } catch (e) {
                                           showDialog(
                                             context: context,
@@ -343,7 +364,8 @@ class _SpeechProfilePageState extends State<SpeechProfilePage> with TickerProvid
                                               context,
                                               () => Navigator.pop(context),
                                               () async {
-                                                await IntercomManager.instance.displayFirmwareUpdateArticle();
+                                                await IntercomManager.instance
+                                                    .displayFirmwareUpdateArticle();
                                               },
                                               'Device Update Required',
                                               'Your current device has an old firmware version (1.0.2). Please check our guide on how to update it.',
@@ -355,46 +377,62 @@ class _SpeechProfilePageState extends State<SpeechProfilePage> with TickerProvid
                                         }
 
                                         await stopDeviceRecording();
-                                        await provider.initialise(finalizedCallback: restartDeviceRecording);
+                                        await provider.initialise(
+                                            finalizedCallback:
+                                                restartDeviceRecording);
                                         // 1.5 minutes seems reasonable
-                                        provider.forceCompletionTimer =
-                                            Timer(Duration(seconds: provider.maxDuration), () {
+                                        provider.forceCompletionTimer = Timer(
+                                            Duration(
+                                                seconds: provider.maxDuration),
+                                            () {
                                           provider.finalize();
                                         });
                                         provider.updateStartedRecording(true);
                                       },
                                       color: Colors.white,
-                                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 32, vertical: 14),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(28)),
                                       child: Text(
-                                        SharedPreferencesUtil().hasSpeakerProfile ? 'Do it again' : 'Get Started',
-                                        style: const TextStyle(color: Colors.black),
+                                        SharedPreferencesUtil()
+                                                .hasSpeakerProfile
+                                            ? 'Do it again'
+                                            : 'Get Started',
+                                        style: const TextStyle(
+                                            color: Colors.black),
                                       ),
                                     ),
                               const SizedBox(height: 24),
                               SharedPreferencesUtil().hasSpeakerProfile
                                   ? TextButton(
                                       onPressed: () {
-                                        routeToPage(context, const UserSpeechSamples());
+                                        routeToPage(
+                                            context, const UserSpeechSamples());
                                       },
                                       child: const Text(
                                         'Listen to my speech profile ➡️',
-                                        style: TextStyle(color: Colors.white, fontSize: 16),
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16),
                                       ))
                                   : const SizedBox(),
                               TextButton(
                                   onPressed: () {
-                                    routeToPage(context, const UserPeoplePage());
+                                    routeToPage(
+                                        context, const UserPeoplePage());
                                   },
                                   child: const Text(
                                     'Recognizing others 👀',
-                                    style: TextStyle(color: Colors.white, fontSize: 16),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
                                   )),
                             ],
                           )
                         : provider.profileCompleted
                             ? Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 0),
                                 decoration: BoxDecoration(
                                   border: const GradientBoxBorder(
                                     gradient: LinearGradient(colors: [
@@ -413,26 +451,35 @@ class _SpeechProfilePageState extends State<SpeechProfilePage> with TickerProvid
                                   },
                                   child: const Text(
                                     "All done!",
-                                    style: TextStyle(color: Colors.white, fontSize: 16),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
                                   ),
                                 ),
                               )
                             : provider.uploadingProfile
                                 ? const CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
                                   )
                                 : Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       const SizedBox(height: 24),
                                       SizedBox(
-                                        width: MediaQuery.sizeOf(context).width * 0.9,
-                                        child: ProgressBarWithPercentage(progressValue: provider.percentageCompleted),
+                                        width:
+                                            MediaQuery.sizeOf(context).width *
+                                                0.9,
+                                        child: ProgressBarWithPercentage(
+                                            progressValue:
+                                                provider.percentageCompleted),
                                       ),
                                       const SizedBox(height: 18),
                                       Text(
                                         provider.message,
-                                        style: TextStyle(color: Colors.grey.shade300, fontSize: 14, height: 1.4),
+                                        style: TextStyle(
+                                            color: Colors.grey.shade300,
+                                            fontSize: 14,
+                                            height: 1.4),
                                         textAlign: TextAlign.center,
                                       ),
                                       const SizedBox(height: 30),

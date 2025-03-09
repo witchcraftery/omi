@@ -7,7 +7,8 @@ class SearchResultHeaderWidget extends StatefulWidget {
   const SearchResultHeaderWidget({super.key});
 
   @override
-  State<SearchResultHeaderWidget> createState() => _SearchResultHeaderWidgetState();
+  State<SearchResultHeaderWidget> createState() =>
+      _SearchResultHeaderWidgetState();
 }
 
 class _SearchResultHeaderWidgetState extends State<SearchResultHeaderWidget> {
@@ -31,7 +32,7 @@ class _SearchResultHeaderWidgetState extends State<SearchResultHeaderWidget> {
                 : provider.totalSearchPages > 0
                     ? const Text(
                         "Search results",
-                        style: const TextStyle(color: Colors.white, fontSize: 14),
+                        style: TextStyle(color: Colors.white, fontSize: 14),
                       )
                     : const SizedBox.shrink())
             : const SizedBox.shrink(),

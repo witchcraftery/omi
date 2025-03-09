@@ -27,7 +27,9 @@ class FriendDeviceConnection extends DeviceConnection {
   get deviceId => device.id;
 
   @override
-  Future<void> connect({Function(String deviceId, DeviceConnectionState state)? onConnectionStateChanged}) async {
+  Future<void> connect(
+      {Function(String deviceId, DeviceConnectionState state)?
+          onConnectionStateChanged}) async {
     await super.connect(onConnectionStateChanged: onConnectionStateChanged);
 
     // Services
@@ -76,7 +78,8 @@ class FriendDeviceConnection extends DeviceConnection {
       return -1;
     }
 
-    var batteryLevelCharacteristic = getCharacteristic(_batteryService!, batteryLevelCharacteristicUuid);
+    var batteryLevelCharacteristic =
+        getCharacteristic(_batteryService!, batteryLevelCharacteristicUuid);
     if (batteryLevelCharacteristic == null) {
       logCharacteristicNotFoundError('Battery level', deviceId);
       return -1;
@@ -96,7 +99,8 @@ class FriendDeviceConnection extends DeviceConnection {
       return null;
     }
 
-    var batteryLevelCharacteristic = getCharacteristic(_batteryService!, batteryLevelCharacteristicUuid);
+    var batteryLevelCharacteristic =
+        getCharacteristic(_batteryService!, batteryLevelCharacteristicUuid);
     if (batteryLevelCharacteristic == null) {
       logCharacteristicNotFoundError('Battery level', deviceId);
       return null;
@@ -136,7 +140,8 @@ class FriendDeviceConnection extends DeviceConnection {
       return Future.value(<int>[]);
     }
 
-    var buttonStateCharacteristic = getCharacteristic(_buttonService!, buttonTriggerCharacteristicUuid);
+    var buttonStateCharacteristic =
+        getCharacteristic(_buttonService!, buttonTriggerCharacteristicUuid);
     if (buttonStateCharacteristic == null) {
       logCharacteristicNotFoundError('Button state', deviceId);
       return Future.value(<int>[]);
@@ -154,14 +159,15 @@ class FriendDeviceConnection extends DeviceConnection {
       return null;
     }
 
-    var buttonDataStreamCharacteristic = getCharacteristic(_buttonService!, buttonTriggerCharacteristicUuid);
+    var buttonDataStreamCharacteristic =
+        getCharacteristic(_buttonService!, buttonTriggerCharacteristicUuid);
     if (buttonDataStreamCharacteristic == null) {
       logCharacteristicNotFoundError('Button data stream', deviceId);
       return null;
     }
 
     try {
-      // TODO: Unknown GATT error here (code 133) on Android. StackOverflow says that it has to do with smaller MTU size
+      // TODO - Unknown GATT error here (code 133) on Android. StackOverflow says that it has to do with smaller MTU size
       // The creator of the plugin says not to use autoConnect
       // https://github.com/chipweinberger/flutter_blue_plus/issues/612
       final device = bleDevice;
@@ -171,13 +177,17 @@ class FriendDeviceConnection extends DeviceConnection {
         }
         if (device.isConnected) {
           try {
-            await buttonDataStreamCharacteristic.setNotifyValue(true); // device could be disconnected here.
+            await buttonDataStreamCharacteristic
+                .setNotifyValue(true); // device could be disconnected here.
           } on PlatformException catch (e) {
             Logger.error('Error setting notify value for audio data stream $e');
           }
         } else {
-          Logger.handle(Exception('Device disconnected before setting notify value'), StackTrace.current,
-              message: 'Device is disconnected. Please reconnect and try again');
+          Logger.handle(
+              Exception('Device disconnected before setting notify value'),
+              StackTrace.current,
+              message:
+                  'Device is disconnected. Please reconnect and try again');
         }
       }
     } catch (e, stackTrace) {
@@ -186,8 +196,9 @@ class FriendDeviceConnection extends DeviceConnection {
     }
 
     debugPrint('Subscribed to button stream from Friend Device');
-    var listener = buttonDataStreamCharacteristic.lastValueStream.listen((value) {
-      debugPrint("new button value ${value}");
+    var listener =
+        buttonDataStreamCharacteristic.lastValueStream.listen((value) {
+      debugPrint("new button value $value");
       if (value.isNotEmpty) onButtonReceived(value);
     });
 
@@ -211,7 +222,8 @@ class FriendDeviceConnection extends DeviceConnection {
       return null;
     }
 
-    var audioDataStreamCharacteristic = getCharacteristic(_friendService!, audioDataStreamCharacteristicUuid);
+    var audioDataStreamCharacteristic =
+        getCharacteristic(_friendService!, audioDataStreamCharacteristicUuid);
     if (audioDataStreamCharacteristic == null) {
       logCharacteristicNotFoundError('Audio data stream', deviceId);
       return null;
@@ -228,13 +240,17 @@ class FriendDeviceConnection extends DeviceConnection {
         }
         if (device.isConnected) {
           try {
-            await audioDataStreamCharacteristic.setNotifyValue(true); // device could be disconnected here.
+            await audioDataStreamCharacteristic
+                .setNotifyValue(true); // device could be disconnected here.
           } on PlatformException catch (e) {
             Logger.error('Error setting notify value for audio data stream $e');
           }
         } else {
-          Logger.handle(Exception('Device disconnected before setting notify value'), StackTrace.current,
-              message: 'Device is disconnected. Please reconnect and try again');
+          Logger.handle(
+              Exception('Device disconnected before setting notify value'),
+              StackTrace.current,
+              message:
+                  'Device is disconnected. Please reconnect and try again');
         }
       }
     } catch (e, stackTrace) {
@@ -243,7 +259,8 @@ class FriendDeviceConnection extends DeviceConnection {
     }
 
     debugPrint('Subscribed to audioBytes stream from Friend Device');
-    var listener = audioDataStreamCharacteristic.lastValueStream.listen((value) {
+    var listener =
+        audioDataStreamCharacteristic.lastValueStream.listen((value) {
       if (value.isNotEmpty) onAudioBytesReceived(value);
     });
 
@@ -265,7 +282,8 @@ class FriendDeviceConnection extends DeviceConnection {
       return BleAudioCodec.pcm8;
     }
 
-    var audioCodecCharacteristic = getCharacteristic(_friendService!, audioCodecCharacteristicUuid);
+    var audioCodecCharacteristic =
+        getCharacteristic(_friendService!, audioCodecCharacteristicUuid);
     if (audioCodecCharacteristic == null) {
       logCharacteristicNotFoundError('Audio codec', deviceId);
       return BleAudioCodec.pcm8;
@@ -321,7 +339,8 @@ class FriendDeviceConnection extends DeviceConnection {
       return Future.value(<int>[]);
     }
 
-    var storageListCharacteristic = getCharacteristic(_storageService!, storageReadControlCharacteristicUuid);
+    var storageListCharacteristic = getCharacteristic(
+        _storageService!, storageReadControlCharacteristicUuid);
     if (storageListCharacteristic == null) {
       logCharacteristicNotFoundError('Storage List', deviceId);
       return Future.value(<int>[]);
@@ -331,7 +350,7 @@ class FriendDeviceConnection extends DeviceConnection {
     if (storageValue.isNotEmpty) {
       //parse the list
       int totalEntries = (storageValue.length / 4).toInt();
-      debugPrint('Storage list: ${totalEntries} items');
+      debugPrint('Storage list: $totalEntries items');
 
       for (int i = 0; i < totalEntries; i++) {
         int baseIndex = i * 4;
@@ -339,13 +358,14 @@ class FriendDeviceConnection extends DeviceConnection {
                     (storageValue[baseIndex + 1] << 8) |
                     (storageValue[baseIndex + 2] << 16) |
                     (storageValue[baseIndex + 3] << 24)) &
-                0xFFFFFFFF as int)
+                0xFFFFFFFF)
             .toSigned(32);
         storageLengths.add(result);
       }
     }
     debugPrint('storage list finished');
-    debugPrint('Storage lengths: ${storageLengths.length} items: ${storageLengths.join(', ')}');
+    debugPrint(
+        'Storage lengths: ${storageLengths.length} items: ${storageLengths.join(', ')}');
     return storageLengths;
   }
 
@@ -358,21 +378,24 @@ class FriendDeviceConnection extends DeviceConnection {
       return null;
     }
 
-    var storageDataStreamCharacteristic = getCharacteristic(_storageService!, storageDataStreamCharacteristicUuid);
+    var storageDataStreamCharacteristic = getCharacteristic(
+        _storageService!, storageDataStreamCharacteristicUuid);
     if (storageDataStreamCharacteristic == null) {
       logCharacteristicNotFoundError('Storage data stream', deviceId);
       return null;
     }
 
     try {
-      await storageDataStreamCharacteristic.setNotifyValue(true); // device could be disconnected here.
+      await storageDataStreamCharacteristic
+          .setNotifyValue(true); // device could be disconnected here.
     } catch (e, stackTrace) {
       logSubscribeError('Storage data stream', deviceId, e, stackTrace);
       return null;
     }
 
     debugPrint('Subscribed to StorageBytes stream from Friend Device');
-    var listener = storageDataStreamCharacteristic.lastValueStream.listen((value) {
+    var listener =
+        storageDataStreamCharacteristic.lastValueStream.listen((value) {
       if (value.isNotEmpty) onStorageBytesReceived(value);
     });
 
@@ -400,7 +423,8 @@ class FriendDeviceConnection extends DeviceConnection {
       return false;
     }
 
-    var speakerDataStreamCharacteristic = getCharacteristic(_speakerService!, speakerDataStreamCharacteristicUuid);
+    var speakerDataStreamCharacteristic = getCharacteristic(
+        _speakerService!, speakerDataStreamCharacteristicUuid);
     if (speakerDataStreamCharacteristic == null) {
       logCharacteristicNotFoundError('Speaker data stream', deviceId);
       return false;
@@ -411,13 +435,15 @@ class FriendDeviceConnection extends DeviceConnection {
   }
 
   @override
-  Future<bool> performWriteToStorage(int numFile, int command, int offset) async {
+  Future<bool> performWriteToStorage(
+      int numFile, int command, int offset) async {
     if (_storageService == null) {
       logServiceNotFoundError('Storage Write', deviceId);
       return false;
     }
 
-    var storageDataStreamCharacteristic = getCharacteristic(_storageService!, storageDataStreamCharacteristicUuid);
+    var storageDataStreamCharacteristic = getCharacteristic(
+        _storageService!, storageDataStreamCharacteristicUuid);
     if (storageDataStreamCharacteristic == null) {
       logCharacteristicNotFoundError('Storage data stream', deviceId);
       return false;
@@ -433,8 +459,14 @@ class FriendDeviceConnection extends DeviceConnection {
       offset & 0xFF,
     ];
 
-    await storageDataStreamCharacteristic
-        .write([command & 0xFF, numFile & 0xFF, offsetBytes[0], offsetBytes[1], offsetBytes[2], offsetBytes[3]]);
+    await storageDataStreamCharacteristic.write([
+      command & 0xFF,
+      numFile & 0xFF,
+      offsetBytes[0],
+      offsetBytes[1],
+      offsetBytes[2],
+      offsetBytes[3]
+    ]);
     return true;
   }
   // Future<List<int>> performGetStorageList();
@@ -446,7 +478,8 @@ class FriendDeviceConnection extends DeviceConnection {
       return;
     }
 
-    var imageCaptureControlCharacteristic = getCharacteristic(_friendService!, imageCaptureControlCharacteristicUuid);
+    var imageCaptureControlCharacteristic = getCharacteristic(
+        _friendService!, imageCaptureControlCharacteristicUuid);
     if (imageCaptureControlCharacteristic == null) {
       logCharacteristicNotFoundError('Image capture control', deviceId);
       return;
@@ -465,7 +498,8 @@ class FriendDeviceConnection extends DeviceConnection {
       return;
     }
 
-    var imageCaptureControlCharacteristic = getCharacteristic(_friendService!, imageCaptureControlCharacteristicUuid);
+    var imageCaptureControlCharacteristic = getCharacteristic(
+        _friendService!, imageCaptureControlCharacteristicUuid);
     if (imageCaptureControlCharacteristic == null) {
       logCharacteristicNotFoundError('Image capture control', deviceId);
       return;
@@ -482,7 +516,8 @@ class FriendDeviceConnection extends DeviceConnection {
       logServiceNotFoundError('Friend', deviceId);
       return false;
     }
-    var imageCaptureControlCharacteristic = getCharacteristic(_friendService!, imageDataStreamCharacteristicUuid);
+    var imageCaptureControlCharacteristic =
+        getCharacteristic(_friendService!, imageDataStreamCharacteristicUuid);
     return imageCaptureControlCharacteristic != null;
   }
 
@@ -494,14 +529,16 @@ class FriendDeviceConnection extends DeviceConnection {
       return null;
     }
 
-    var imageStreamCharacteristic = getCharacteristic(_friendService!, imageDataStreamCharacteristicUuid);
+    var imageStreamCharacteristic =
+        getCharacteristic(_friendService!, imageDataStreamCharacteristicUuid);
     if (imageStreamCharacteristic == null) {
       logCharacteristicNotFoundError('Image data stream', deviceId);
       return null;
     }
 
     try {
-      await imageStreamCharacteristic.setNotifyValue(true); // device could be disconnected here.
+      await imageStreamCharacteristic
+          .setNotifyValue(true); // device could be disconnected here.
     } catch (e, stackTrace) {
       logSubscribeError('Image data stream', deviceId, e, stackTrace);
       return null;
@@ -560,7 +597,8 @@ class FriendDeviceConnection extends DeviceConnection {
       return null;
     }
 
-    var accelCharacteristic = getCharacteristic(_accelService!, accelDataStreamCharacteristicUuid);
+    var accelCharacteristic =
+        getCharacteristic(_accelService!, accelDataStreamCharacteristicUuid);
     if (accelCharacteristic == null) {
       logCharacteristicNotFoundError('Accelerometer', deviceId);
       return null;
@@ -595,13 +633,13 @@ class FriendDeviceConnection extends DeviceConnection {
                         (value[baseIndex + 1] << 8) |
                         (value[baseIndex + 2] << 16) |
                         (value[baseIndex + 3] << 24)) &
-                    0xFFFFFFFF as int)
+                    0xFFFFFFFF)
                 .toSigned(32);
             var temp = ((value[baseIndex + 4] |
                         (value[baseIndex + 5] << 8) |
                         (value[baseIndex + 6] << 16) |
                         (value[baseIndex + 7] << 24)) &
-                    0xFFFFFFFF as int)
+                    0xFFFFFFFF)
                 .toSigned(32);
             double axisValue = result + (temp / 1000000);
             accelerometerData.add(axisValue);
@@ -615,9 +653,10 @@ class FriendDeviceConnection extends DeviceConnection {
           debugPrint('Accelerometer z direction: ${accelerometerData[2]}');
           debugPrint('Gyroscope z direction: ${accelerometerData[5]}\n');
           //simple threshold fall calcaultor
-          var fall_number =
-              sqrt(pow(accelerometerData[0], 2) + pow(accelerometerData[1], 2) + pow(accelerometerData[2], 2));
-          if (fall_number > 30.0) {
+          var fallNumber = sqrt(pow(accelerometerData[0], 2) +
+              pow(accelerometerData[1], 2) +
+              pow(accelerometerData[2], 2));
+          if (fallNumber > 30.0) {
             AwesomeNotifications().createNotification(
               content: NotificationContent(
                 id: 6,

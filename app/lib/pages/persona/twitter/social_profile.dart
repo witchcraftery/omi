@@ -80,7 +80,10 @@ class _SocialHandleScreenState extends State<SocialHandleScreen> {
                         const Spacer(flex: 1),
                         Text(
                           'Let\'s train your clone!\nWhat\'s your X handle?',
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
@@ -89,7 +92,8 @@ class _SocialHandleScreenState extends State<SocialHandleScreen> {
                         const SizedBox(height: 10),
                         Text(
                           'We will pre-train your Omi clone\nbased on your account\'s activity',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: Colors.white.withOpacity(0.55),
                             shadows: [
                               Shadow(
@@ -111,7 +115,8 @@ class _SocialHandleScreenState extends State<SocialHandleScreen> {
                           ),
                           textAlign: TextAlign.left,
                           decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 16),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
@@ -171,7 +176,8 @@ class _SocialHandleScreenState extends State<SocialHandleScreen> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your X handle';
                             }
-                            if (value.trim().length < 3 || value.trim().length > 15) {
+                            if (value.trim().length < 3 ||
+                                value.trim().length > 15) {
                               return 'Please enter a valid X handle';
                             }
                             return null;
@@ -185,19 +191,28 @@ class _SocialHandleScreenState extends State<SocialHandleScreen> {
                             if (_formKey.currentState!.validate()) {
                               provider.setIsLoading(true);
                               if (FirebaseAuth.instance.currentUser == null) {
-                                debugPrint('User is not signed in, signing in anonymously');
+                                debugPrint(
+                                    'User is not signed in, signing in anonymously');
                                 await signInAnonymously();
                               }
                               var handle = _controller.text.trim();
                               await Posthog().capture(
                                 eventName: 'x_handle_submitted',
-                                properties: {'handle': handle, 'uid': FirebaseAuth.instance.currentUser?.uid ?? ''},
+                                properties: {
+                                  'handle': handle,
+                                  'uid':
+                                      FirebaseAuth.instance.currentUser?.uid ??
+                                          ''
+                                },
                               );
                               SharedPreferencesUtil().hasOmiDevice = false;
-                              Provider.of<PersonaProvider>(context, listen: false).setRouting(widget.routing);
+                              Provider.of<PersonaProvider>(context,
+                                      listen: false)
+                                  .setRouting(widget.routing);
                               await provider.getTwitterProfile(handle);
                               if (provider.twitterProfile.isNotEmpty) {
-                                routeToPage(context, const VerifyIdentityScreen());
+                                routeToPage(
+                                    context, const VerifyIdentityScreen());
                               }
                             }
                           },
@@ -215,7 +230,8 @@ class _SocialHandleScreenState extends State<SocialHandleScreen> {
                                   height: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
                                   ),
                                 )
                               : const Text(
@@ -226,8 +242,12 @@ class _SocialHandleScreenState extends State<SocialHandleScreen> {
                                   ),
                                 ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).textScaleFactor > 1.0 ? 18 : 32),
-                        FirebaseAuth.instance.currentUser == null || FirebaseAuth.instance.currentUser!.isAnonymous
+                        SizedBox(
+                            height: MediaQuery.of(context).textScaleFactor > 1.0
+                                ? 18
+                                : 32),
+                        FirebaseAuth.instance.currentUser == null ||
+                                FirebaseAuth.instance.currentUser!.isAnonymous
                             ? TextButton(
                                 onPressed: () async {
                                   FocusScope.of(context).unfocus();
@@ -238,7 +258,8 @@ class _SocialHandleScreenState extends State<SocialHandleScreen> {
                                     },
                                   );
 
-                                  routeToPage(context, OnboardingWrapper());
+                                  routeToPage(
+                                      context, const OnboardingWrapper());
                                 },
                                 child: const Text(
                                   'Clone from omi device',

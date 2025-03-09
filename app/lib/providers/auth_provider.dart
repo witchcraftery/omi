@@ -16,25 +16,36 @@ class AuthenticationProvider extends BaseProvider {
   User? user;
   String? authToken;
   bool _loading = false;
+  @override
   bool get loading => _loading;
 
   AuthenticationProvider() {
-    _auth.authStateChanges().distinct((p, n) => p?.uid == n?.uid).listen((User? user) {
+    _auth
+        .authStateChanges()
+        .distinct((p, n) => p?.uid == n?.uid)
+        .listen((User? user) {
       this.user = user;
       SharedPreferencesUtil().uid = user?.uid ?? '';
       SharedPreferencesUtil().email = user?.email ?? '';
-      SharedPreferencesUtil().givenName = user?.displayName?.split(' ')[0] ?? '';
+      SharedPreferencesUtil().givenName =
+          user?.displayName?.split(' ')[0] ?? '';
     });
-    _auth.idTokenChanges().distinct((p, n) => p?.uid == n?.uid).listen((User? user) async {
+    _auth
+        .idTokenChanges()
+        .distinct((p, n) => p?.uid == n?.uid)
+        .listen((User? user) async {
       if (user == null) {
-        debugPrint('User is currently signed out or the token has been revoked! ${user == null}');
+        debugPrint(
+            'User is currently signed out or the token has been revoked! ${user == null}');
         SharedPreferencesUtil().authToken = '';
         authToken = null;
       } else {
-        debugPrint('User is signed in at ${DateTime.now()} with user ${user.uid}');
+        debugPrint(
+            'User is signed in at ${DateTime.now()} with user ${user.uid}');
         try {
           if (SharedPreferencesUtil().authToken.isEmpty ||
-              DateTime.now().millisecondsSinceEpoch > SharedPreferencesUtil().tokenExpirationTime) {
+              DateTime.now().millisecondsSinceEpoch >
+                  SharedPreferencesUtil().tokenExpirationTime) {
             authToken = await getIdToken();
           }
         } catch (e) {
@@ -46,7 +57,8 @@ class AuthenticationProvider extends BaseProvider {
     });
   }
 
-  bool isSignedIn() => _auth.currentUser != null && !_auth.currentUser!.isAnonymous;
+  bool isSignedIn() =>
+      _auth.currentUser != null && !_auth.currentUser!.isAnonymous;
 
   void setLoading(bool value) {
     _loading = value;
@@ -60,7 +72,8 @@ class AuthenticationProvider extends BaseProvider {
       if (isSignedIn()) {
         _signIn(onSignIn);
       } else {
-        AppSnackbar.showSnackbarError('Failed to sign in with Google, please try again.');
+        AppSnackbar.showSnackbarError(
+            'Failed to sign in with Google, please try again.');
       }
       setLoadingState(false);
     }
@@ -73,7 +86,8 @@ class AuthenticationProvider extends BaseProvider {
       if (isSignedIn()) {
         _signIn(onSignIn);
       } else {
-        AppSnackbar.showSnackbarError('Failed to sign in with Apple, please try again.');
+        AppSnackbar.showSnackbarError(
+            'Failed to sign in with Apple, please try again.');
       }
       setLoadingState(false);
     }
@@ -87,9 +101,11 @@ class AuthenticationProvider extends BaseProvider {
       debugPrint('Token: $token');
       return token;
     } catch (e, stackTrace) {
-      AppSnackbar.showSnackbarError('Failed to retrieve firebase token, please try again.');
+      AppSnackbar.showSnackbarError(
+          'Failed to retrieve firebase token, please try again.');
 
-      CrashReporting.reportHandledCrash(e, stackTrace, level: NonFatalExceptionLevel.error);
+      CrashReporting.reportHandledCrash(e, stackTrace,
+          level: NonFatalExceptionLevel.error);
 
       return null;
     }
@@ -103,9 +119,11 @@ class AuthenticationProvider extends BaseProvider {
       try {
         user = FirebaseAuth.instance.currentUser!;
       } catch (e, stackTrace) {
-        AppSnackbar.showSnackbarError('Unexpected error signing in, Firebase error, please try again.');
+        AppSnackbar.showSnackbarError(
+            'Unexpected error signing in, Firebase error, please try again.');
 
-        CrashReporting.reportHandledCrash(e, stackTrace, level: NonFatalExceptionLevel.error);
+        CrashReporting.reportHandledCrash(e, stackTrace,
+            level: NonFatalExceptionLevel.error);
         return;
       }
       String newUid = user.uid;
@@ -113,7 +131,8 @@ class AuthenticationProvider extends BaseProvider {
       MixpanelManager().identify();
       onSignIn();
     } else {
-      AppSnackbar.showSnackbarError('Unexpected error signing in, please try again');
+      AppSnackbar.showSnackbarError(
+          'Unexpected error signing in, please try again');
     }
   }
 
@@ -138,7 +157,8 @@ class AuthenticationProvider extends BaseProvider {
         return;
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -147,7 +167,8 @@ class AuthenticationProvider extends BaseProvider {
       try {
         await FirebaseAuth.instance.currentUser?.linkWithCredential(credential);
       } catch (e) {
-        if (e is FirebaseAuthException && e.code == 'credential-already-in-use') {
+        if (e is FirebaseAuthException &&
+            e.code == 'credential-already-in-use') {
           // Get existing user credentials
           final existingCred = e.credential;
           final oldUserId = FirebaseAuth.instance.currentUser?.uid;
@@ -162,19 +183,24 @@ class AuthenticationProvider extends BaseProvider {
 
           SharedPreferencesUtil().onboardingCompleted = false;
           SharedPreferencesUtil().uid = newUserId ?? '';
-          SharedPreferencesUtil().email = FirebaseAuth.instance.currentUser?.email ?? '';
-          SharedPreferencesUtil().givenName = FirebaseAuth.instance.currentUser?.displayName?.split(' ')[0] ?? '';
+          SharedPreferencesUtil().email =
+              FirebaseAuth.instance.currentUser?.email ?? '';
+          SharedPreferencesUtil().givenName =
+              FirebaseAuth.instance.currentUser?.displayName?.split(' ')[0] ??
+                  '';
           if (oldUserId != null && newUserId != null) {
             await migrateAppOwnerId(oldUserId);
           }
           return;
         }
-        AppSnackbar.showSnackbarError('Failed to link with Google, please try again.');
+        AppSnackbar.showSnackbarError(
+            'Failed to link with Google, please try again.');
         rethrow;
       }
     } catch (e) {
       print('Error linking with Google: $e');
-      AppSnackbar.showSnackbarError('Failed to link with Google, please try again.');
+      AppSnackbar.showSnackbarError(
+          'Failed to link with Google, please try again.');
       rethrow;
     } finally {
       setLoading(false);
@@ -186,9 +212,11 @@ class AuthenticationProvider extends BaseProvider {
     try {
       final appleProvider = AppleAuthProvider();
       try {
-        await FirebaseAuth.instance.currentUser?.linkWithProvider(appleProvider);
+        await FirebaseAuth.instance.currentUser
+            ?.linkWithProvider(appleProvider);
       } catch (e) {
-        if (e is FirebaseAuthException && e.code == 'credential-already-in-use') {
+        if (e is FirebaseAuthException &&
+            e.code == 'credential-already-in-use') {
           // Get existing user credentials
           final existingCred = e.credential;
           final oldUserId = FirebaseAuth.instance.currentUser?.uid;
@@ -203,19 +231,24 @@ class AuthenticationProvider extends BaseProvider {
 
           SharedPreferencesUtil().onboardingCompleted = false;
           SharedPreferencesUtil().uid = newUserId ?? '';
-          SharedPreferencesUtil().email = FirebaseAuth.instance.currentUser?.email ?? '';
-          SharedPreferencesUtil().givenName = FirebaseAuth.instance.currentUser?.displayName?.split(' ')[0] ?? '';
+          SharedPreferencesUtil().email =
+              FirebaseAuth.instance.currentUser?.email ?? '';
+          SharedPreferencesUtil().givenName =
+              FirebaseAuth.instance.currentUser?.displayName?.split(' ')[0] ??
+                  '';
           if (oldUserId != null && newUserId != null) {
             await migrateAppOwnerId(oldUserId);
           }
           return;
         }
-        AppSnackbar.showSnackbarError('Failed to link with Apple, please try again.');
+        AppSnackbar.showSnackbarError(
+            'Failed to link with Apple, please try again.');
         rethrow;
       }
     } catch (e) {
       print('Error linking with Apple: $e');
-      AppSnackbar.showSnackbarError('Failed to link with Apple, please try again.');
+      AppSnackbar.showSnackbarError(
+          'Failed to link with Apple, please try again.');
       rethrow;
     } finally {
       setLoading(false);

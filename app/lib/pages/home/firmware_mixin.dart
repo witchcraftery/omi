@@ -1,18 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
-import 'package:friend_private/backend/http/shared.dart';
 import 'package:friend_private/backend/schema/bt_device/bt_device.dart';
-import 'package:friend_private/env/env.dart';
 import 'package:friend_private/http/api/device.dart';
 import 'package:friend_private/services/services.dart';
 import 'package:friend_private/utils/device.dart';
 import 'package:nordic_dfu/nordic_dfu.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:version/version.dart';
 import 'package:http/http.dart' as http;
 
 mixin FirmwareMixin<T extends StatefulWidget> on State<T> {
@@ -27,7 +22,8 @@ mixin FirmwareMixin<T extends StatefulWidget> on State<T> {
 
   // TODO: thinh, use connection directly
   Future _bleDisconnectDevice(BtDevice btDevice) async {
-    var connection = await ServiceManager.instance().device.ensureConnection(btDevice.id);
+    var connection =
+        await ServiceManager.instance().device.ensureConnection(btDevice.id);
     if (connection == null) {
       return Future.value(null);
     }
@@ -41,7 +37,8 @@ mixin FirmwareMixin<T extends StatefulWidget> on State<T> {
     await _bleDisconnectDevice(btDevice);
     await Future.delayed(const Duration(seconds: 2));
 
-    String firmwareFile = '${(await getApplicationDocumentsDirectory()).path}/firmware.zip';
+    String firmwareFile =
+        '${(await getApplicationDocumentsDirectory()).path}/firmware.zip';
     NordicDfu dfu = NordicDfu();
     await dfu.startDfu(
       btDevice.id,
@@ -58,20 +55,27 @@ mixin FirmwareMixin<T extends StatefulWidget> on State<T> {
         packetReceiptNotificationsEnabled: true,
         rebootTime: 1000,
       ),
-      onProgressChanged: (deviceAddress, percent, speed, avgSpeed, currentPart, partsTotal) {
+      onProgressChanged:
+          (deviceAddress, percent, speed, avgSpeed, currentPart, partsTotal) {
         debugPrint('deviceAddress: $deviceAddress, percent: $percent');
         setState(() {
           installProgress = percent.toInt();
         });
       },
-      onError: (deviceAddress, error, errorType, message) =>
-          debugPrint('deviceAddress: $deviceAddress, error: $error, errorType: $errorType, message: $message'),
-      onDeviceConnecting: (deviceAddress) => debugPrint('deviceAddress: $deviceAddress, onDeviceConnecting'),
-      onDeviceConnected: (deviceAddress) => debugPrint('deviceAddress: $deviceAddress, onDeviceConnected'),
-      onDfuProcessStarting: (deviceAddress) => debugPrint('deviceAddress: $deviceAddress, onDfuProcessStarting'),
-      onDfuProcessStarted: (deviceAddress) => debugPrint('deviceAddress: $deviceAddress, onDfuProcessStarted'),
-      onEnablingDfuMode: (deviceAddress) => debugPrint('deviceAddress: $deviceAddress, onEnablingDfuMode'),
-      onFirmwareValidating: (deviceAddress) => debugPrint('address: $deviceAddress, onFirmwareValidating'),
+      onError: (deviceAddress, error, errorType, message) => debugPrint(
+          'deviceAddress: $deviceAddress, error: $error, errorType: $errorType, message: $message'),
+      onDeviceConnecting: (deviceAddress) =>
+          debugPrint('deviceAddress: $deviceAddress, onDeviceConnecting'),
+      onDeviceConnected: (deviceAddress) =>
+          debugPrint('deviceAddress: $deviceAddress, onDeviceConnected'),
+      onDfuProcessStarting: (deviceAddress) =>
+          debugPrint('deviceAddress: $deviceAddress, onDfuProcessStarting'),
+      onDfuProcessStarted: (deviceAddress) =>
+          debugPrint('deviceAddress: $deviceAddress, onDfuProcessStarted'),
+      onEnablingDfuMode: (deviceAddress) =>
+          debugPrint('deviceAddress: $deviceAddress, onEnablingDfuMode'),
+      onFirmwareValidating: (deviceAddress) =>
+          debugPrint('address: $deviceAddress, onFirmwareValidating'),
       onDfuCompleted: (deviceAddress) {
         debugPrint('deviceAddress: $deviceAddress, onDfuCompleted');
         setState(() {
@@ -94,13 +98,16 @@ mixin FirmwareMixin<T extends StatefulWidget> on State<T> {
       manufacturerName: manufacturerName,
     );
     if (latestFirmwareDetails['ota_update_steps'] != null) {
-      otaUpdateSteps = List<String>.from(latestFirmwareDetails['ota_update_steps']);
+      otaUpdateSteps =
+          List<String>.from(latestFirmwareDetails['ota_update_steps']);
     }
   }
 
-  Future<(String, bool, String)> shouldUpdateFirmware({required String currentFirmware}) async {
+  Future<(String, bool, String)> shouldUpdateFirmware(
+      {required String currentFirmware}) async {
     return DeviceUtils.shouldUpdateFirmware(
-        currentFirmware: currentFirmware, latestFirmwareDetails: latestFirmwareDetails);
+        currentFirmware: currentFirmware,
+        latestFirmwareDetails: latestFirmwareDetails);
   }
 
   Future downloadFirmware() async {
@@ -124,7 +131,8 @@ mixin FirmwareMixin<T extends StatefulWidget> on State<T> {
     response.asStream().listen((http.StreamedResponse r) {
       r.stream.listen((List<int> chunk) {
         // Display percentage of completion
-        debugPrint('downloadPercentage: ${downloaded / r.contentLength! * 100}');
+        debugPrint(
+            'downloadPercentage: ${downloaded / r.contentLength! * 100}');
         setState(() {
           downloadProgress = (downloaded / r.contentLength! * 100).toInt();
         });
@@ -132,7 +140,8 @@ mixin FirmwareMixin<T extends StatefulWidget> on State<T> {
         downloaded += chunk.length;
       }, onDone: () async {
         // Display percentage of completion
-        debugPrint('downloadPercentage: ${downloaded / r.contentLength! * 100}');
+        debugPrint(
+            'downloadPercentage: ${downloaded / r.contentLength! * 100}');
 
         // Save the file
         File file = File('$dir/firmware.zip');

@@ -1,7 +1,3 @@
-import 'dart:io';
-
-import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/schema/fact.dart';
 import 'package:friend_private/providers/connectivity_provider.dart';
@@ -31,7 +27,10 @@ class _FactsPage extends StatefulWidget {
 }
 
 class _FactsPageState extends State<_FactsPage> {
-  static List<String> values = ["_all", ...FactCategory.values.map((c) => c.toString().split(".").last)];
+  static List<String> values = [
+    "_all",
+    ...FactCategory.values.map((c) => c.toString().split(".").last)
+  ];
   String? value = values.first;
 
   @override
@@ -53,7 +52,8 @@ class _FactsPageState extends State<_FactsPage> {
       }
 
       return values.map((val) {
-        var count = (provider.facts.where((f) => f.category.toString().split(".").last == val)).length;
+        var count = (provider.facts
+            .where((f) => f.category.toString().split(".").last == val)).length;
         return DropdownMenuItem<String>(
             value: val,
             child: Text(val == "_all"
@@ -112,20 +112,25 @@ class _FactsPageState extends State<_FactsPage> {
     );
   }
 
-  Future<void> _showFactDialog(BuildContext context, FactsProvider provider, {Fact? fact}) async {
-    final connectivityProvider = Provider.of<ConnectivityProvider>(context, listen: false);
+  Future<void> _showFactDialog(BuildContext context, FactsProvider provider,
+      {Fact? fact}) async {
+    final connectivityProvider =
+        Provider.of<ConnectivityProvider>(context, listen: false);
     if (!connectivityProvider.isConnected) {
       ConnectivityProvider.showNoInternetDialog(context);
       return;
     }
 
-    final contentController = TextEditingController(text: fact?.content.decodeString ?? '');
+    final contentController =
+        TextEditingController(text: fact?.content.decodeString ?? '');
     final formKey = GlobalKey<FormState>();
 
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        FactCategory selectedCategory = fact?.category ?? provider.selectedCategory ?? FactCategory.values.first;
+        FactCategory selectedCategory = fact?.category ??
+            provider.selectedCategory ??
+            FactCategory.values.first;
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
             setCategory(FactCategory category) {
@@ -139,7 +144,8 @@ class _FactsPageState extends State<_FactsPage> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              content: _showFactDialogForm(formKey, contentController, selectedCategory, provider, setCategory),
+              content: _showFactDialogForm(formKey, contentController,
+                  selectedCategory, provider, setCategory),
               actions: _showFactDialogActions(
                 context,
                 formKey,
@@ -172,7 +178,7 @@ class _FactsPageState extends State<_FactsPage> {
           TextFormField(
             controller: contentController,
             autofocus: true,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'I love Omi ...',
               border: InputBorder.none,
               labelStyle: TextStyle(color: Colors.grey),
@@ -195,10 +201,13 @@ class _FactsPageState extends State<_FactsPage> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    color: category == selectedCategory ? Colors.grey.shade800 : Colors.grey.shade900,
+                    color: category == selectedCategory
+                        ? Colors.grey.shade800
+                        : Colors.grey.shade900,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -215,7 +224,7 @@ class _FactsPageState extends State<_FactsPage> {
                                 ),
                               ],
                             )
-                          : SizedBox.shrink(),
+                          : const SizedBox.shrink(),
                       Text(
                         category.toString().split('.').last,
                         style: const TextStyle(color: Colors.white),
@@ -263,7 +272,8 @@ class _FactsPageState extends State<_FactsPage> {
     onPressed() async {
       if (formKey.currentState!.validate()) {
         if (isEditing && fact != null) {
-          provider.editFactProvider(fact, contentController.text, selectedCategory);
+          provider.editFactProvider(
+              fact, contentController.text, selectedCategory);
           MixpanelManager().factsPageEditedFact();
         } else {
           provider.createFactProvider(contentController.text, selectedCategory);
@@ -284,13 +294,15 @@ class _FactsPageState extends State<_FactsPage> {
               },
               child: const Opacity(
                 opacity: .6,
-                child: Text('Delete', style: TextStyle(color: Colors.redAccent)),
+                child:
+                    Text('Delete', style: TextStyle(color: Colors.redAccent)),
               ),
             )
           : const SizedBox.shrink(),
       TextButton(
         onPressed: onPressed,
-        child: Text(isEditing ? 'Update' : 'Add', style: const TextStyle(color: Colors.white)),
+        child: Text(isEditing ? 'Update' : 'Add',
+            style: const TextStyle(color: Colors.white)),
       ),
     ];
   }
@@ -344,7 +356,8 @@ class _FactsPageState extends State<_FactsPage> {
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: const BoxDecoration(
                     color: Colors.black54,
                     borderRadius: BorderRadius.all(Radius.circular(24)),
@@ -407,8 +420,8 @@ class _FactsPageState extends State<_FactsPage> {
           )
         : ListView.separated(
             separatorBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(
+              return const Padding(
+                padding: EdgeInsets.only(
                   left: 20,
                   right: 20,
                 ),
@@ -441,7 +454,8 @@ class _FactsPageState extends State<_FactsPage> {
                     padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                     child: ListTile(
                       title: Text(fact.content.decodeString),
-                      onTap: () => _showFactDialog(context, provider, fact: fact),
+                      onTap: () =>
+                          _showFactDialog(context, provider, fact: fact),
                     ),
                   ),
                 ),

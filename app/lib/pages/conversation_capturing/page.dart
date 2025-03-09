@@ -20,10 +20,12 @@ class ConversationCapturingPage extends StatefulWidget {
   });
 
   @override
-  State<ConversationCapturingPage> createState() => _ConversationCapturingPageState();
+  State<ConversationCapturingPage> createState() =>
+      _ConversationCapturingPageState();
 }
 
-class _ConversationCapturingPageState extends State<ConversationCapturingPage> with TickerProviderStateMixin {
+class _ConversationCapturingPageState extends State<ConversationCapturingPage>
+    with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   TabController? _controller;
   late bool showSummarizeConfirmation;
@@ -34,13 +36,15 @@ class _ConversationCapturingPageState extends State<ConversationCapturingPage> w
   void initState() {
     _controller = TabController(length: 2, vsync: this, initialIndex: 0);
     _controller!.addListener(() => setState(() {}));
-    showSummarizeConfirmation = SharedPreferencesUtil().showSummarizeConfirmation;
+    showSummarizeConfirmation =
+        SharedPreferencesUtil().showSummarizeConfirmation;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final captureProvider = context.read<CaptureProvider>();
       if (captureProvider.segments.isNotEmpty) {
         if (captureProvider.inProgressConversation != null) {
           setState(() {
-            _elapsedTime = convertDateTimeToSeconds(captureProvider.inProgressConversation!.createdAt);
+            _elapsedTime = convertDateTimeToSeconds(
+                captureProvider.inProgressConversation!.createdAt);
           });
         }
         _startTimer();
@@ -150,7 +154,10 @@ class _ConversationCapturingPageState extends State<ConversationCapturingPage> w
                   padding: EdgeInsets.zero,
                   indicatorPadding: EdgeInsets.zero,
                   controller: _controller,
-                  labelStyle: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 18),
+                  labelStyle: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(fontSize: 18),
                   tabs: [
                     Tab(
                       text: conversationSource == ConversationSource.openglass
@@ -161,7 +168,9 @@ class _ConversationCapturingPageState extends State<ConversationCapturingPage> w
                     ),
                     const Tab(text: 'Summary')
                   ],
-                  indicator: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.circular(16)),
+                  indicator: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(16)),
                 ),
                 Expanded(
                   child: Padding(
@@ -179,7 +188,10 @@ class _ConversationCapturingPageState extends State<ConversationCapturingPage> w
                                       const SizedBox(height: 80),
                                       Center(
                                         child: Text(
-                                          conversationSource == ConversationSource.friend ? "No transcript" : "Empty",
+                                          conversationSource ==
+                                                  ConversationSource.friend
+                                              ? "No transcript"
+                                              : "Empty",
                                         ),
                                       ),
                                     ],
@@ -200,13 +212,17 @@ class _ConversationCapturingPageState extends State<ConversationCapturingPage> w
                               const SizedBox(height: 80),
                               Center(
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 32.0),
                                   child: Text(
                                     provider.segments.isEmpty
                                         ? "No summary"
                                         : "Conversation is summarized after 2 minutes of no speech 🤫",
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: provider.segments.isEmpty ? 16 : 22),
+                                    style: TextStyle(
+                                        fontSize: provider.segments.isEmpty
+                                            ? 16
+                                            : 22),
                                   ),
                                 ),
                               ),
@@ -222,7 +238,8 @@ class _ConversationCapturingPageState extends State<ConversationCapturingPage> w
                 ),
               ],
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
             floatingActionButton: provider.segments.isEmpty
                 ? const SizedBox()
                 : Column(
@@ -233,7 +250,8 @@ class _ConversationCapturingPageState extends State<ConversationCapturingPage> w
                         height: _controller?.index == 0 ? 0 : 30,
                         child: Text(
                           _elapsedTime > 0 ? convertToHHMMSS(_elapsedTime) : "",
-                          style: const TextStyle(fontSize: 16, color: Colors.white),
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.white),
                         ),
                       ),
                       Container(
@@ -248,7 +266,9 @@ class _ConversationCapturingPageState extends State<ConversationCapturingPage> w
                           onTap: () {
                             if (provider.segments.isNotEmpty) {
                               if (!showSummarizeConfirmation) {
-                                context.read<CaptureProvider>().forceProcessingCurrentConversation();
+                                context
+                                    .read<CaptureProvider>()
+                                    .forceProcessingCurrentConversation();
                                 Navigator.of(context).pop();
                                 return;
                               }
@@ -261,22 +281,25 @@ class _ConversationCapturingPageState extends State<ConversationCapturingPage> w
                                           title: "Finished Conversation?",
                                           description:
                                               "Are you sure you want to stop recording and summarize the conversation now?",
-                                          checkboxValue: !showSummarizeConfirmation,
+                                          checkboxValue:
+                                              !showSummarizeConfirmation,
                                           checkboxText: "Don't ask me again",
                                           onCheckboxChanged: (value) {
-                                            if (value != null) {
-                                              setState(() {
-                                                showSummarizeConfirmation = !value;
-                                              });
-                                            }
+                                            setState(() {
+                                              showSummarizeConfirmation =
+                                                  !value;
+                                            });
                                           },
                                           onCancel: () {
                                             Navigator.of(context).pop();
                                           },
                                           onConfirm: () {
-                                            SharedPreferencesUtil().showSummarizeConfirmation =
+                                            SharedPreferencesUtil()
+                                                    .showSummarizeConfirmation =
                                                 showSummarizeConfirmation;
-                                            context.read<CaptureProvider>().forceProcessingCurrentConversation();
+                                            context
+                                                .read<CaptureProvider>()
+                                                .forceProcessingCurrentConversation();
                                             Navigator.of(context).pop();
                                             Navigator.of(context).pop();
                                           },

@@ -31,7 +31,8 @@ class PersonaProvider extends ChangeNotifier {
   }
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController(text: SharedPreferencesUtil().givenName);
+  TextEditingController nameController =
+      TextEditingController(text: SharedPreferencesUtil().givenName);
   TextEditingController usernameController = TextEditingController();
   bool isUsernameTaken = false;
   bool isCheckingUsername = false;
@@ -86,7 +87,8 @@ class PersonaProvider extends ChangeNotifier {
   }
 
   Future verifyTweet() async {
-    var (verified, verifiedPersonaId) = await verifyTwitterOwnership(_username, _twitterProfile['profile'], personaId);
+    var (verified, verifiedPersonaId) = await verifyTwitterOwnership(
+        _username, _twitterProfile['profile'], personaId);
     if (!verified) {
       AppSnackbar.showSnackbarError('Failed to verify Twitter handle');
     }
@@ -114,7 +116,8 @@ class PersonaProvider extends ChangeNotifier {
   Future getVerifiedUserPersona() async {
     setIsLoading(true);
 
-    if (_verifiedPersonaId == null || routing != PersonaProfileRouting.no_device) {
+    if (_verifiedPersonaId == null ||
+        routing != PersonaProfileRouting.no_device) {
       // If no verified persona ID exists, get or create one
       var res = await getUpsertUserPersonaServer();
       if (res != null) {
@@ -198,7 +201,8 @@ class PersonaProvider extends ChangeNotifier {
 
   void validateForm() {
     bool hasValidImage = selectedImage != null || selectedImageUrl != null;
-    bool hasValidFormFields = true; //formKey.currentState!.validate(); // dont use form for now
+    bool hasValidFormFields =
+        true; //formKey.currentState!.validate(); // dont use form for now
     bool hasKnowledgeData = hasOmiConnection || hasTwitterConnection;
 
     isFormValid = hasValidImage && hasValidFormFields && hasKnowledgeData;
@@ -258,7 +262,8 @@ class PersonaProvider extends ChangeNotifier {
 
   Future<void> updatePersona() async {
     if (!hasOmiConnection && !hasTwitterConnection) {
-      AppSnackbar.showSnackbarError('Please connect at least one knowledge data source (Omi or Twitter)');
+      AppSnackbar.showSnackbarError(
+          'Please connect at least one knowledge data source (Omi or Twitter)');
       return;
     }
 
@@ -272,26 +277,39 @@ class PersonaProvider extends ChangeNotifier {
       };
 
       // Fix hasOmiConnection
-      if (!hasOmiConnection && _userPersona?.uid == SharedPreferencesUtil().uid) {
+      if (!hasOmiConnection &&
+          _userPersona?.uid == SharedPreferencesUtil().uid) {
         hasOmiConnection = true;
       }
 
-      if (hasOmiConnection && !_userPersona!.connectedAccounts.contains('omi')) {
-        personaData['connected_accounts'] = [..._userPersona!.connectedAccounts, 'omi'];
-      } else if (!hasOmiConnection && _userPersona!.connectedAccounts.contains('omi')) {
-        personaData['connected_accounts'] =
-            _userPersona!.connectedAccounts.where((element) => element != 'omi').toList();
+      if (hasOmiConnection &&
+          !_userPersona!.connectedAccounts.contains('omi')) {
+        personaData['connected_accounts'] = [
+          ..._userPersona!.connectedAccounts,
+          'omi'
+        ];
+      } else if (!hasOmiConnection &&
+          _userPersona!.connectedAccounts.contains('omi')) {
+        personaData['connected_accounts'] = _userPersona!.connectedAccounts
+            .where((element) => element != 'omi')
+            .toList();
       }
 
-      if (hasTwitterConnection && !_userPersona!.connectedAccounts.contains('twitter')) {
-        personaData['connected_accounts'] = [..._userPersona!.connectedAccounts, 'twitter'];
+      if (hasTwitterConnection &&
+          !_userPersona!.connectedAccounts.contains('twitter')) {
+        personaData['connected_accounts'] = [
+          ..._userPersona!.connectedAccounts,
+          'twitter'
+        ];
         personaData['twitter'] = {
           'username': _twitterProfile['profile'],
           'avatar': _twitterProfile['avatar'],
         };
-      } else if (!hasTwitterConnection && _userPersona!.connectedAccounts.contains('twitter')) {
-        personaData['connected_accounts'] =
-            _userPersona!.connectedAccounts.where((element) => element != 'twitter').toList();
+      } else if (!hasTwitterConnection &&
+          _userPersona!.connectedAccounts.contains('twitter')) {
+        personaData['connected_accounts'] = _userPersona!.connectedAccounts
+            .where((element) => element != 'twitter')
+            .toList();
       }
 
       bool success = await updatePersonaApp(selectedImage, personaData);
@@ -319,7 +337,8 @@ class PersonaProvider extends ChangeNotifier {
     }
 
     if (!hasOmiConnection && !hasTwitterConnection) {
-      AppSnackbar.showSnackbarError('Please connect at least one knowledge data source (Omi or Twitter)');
+      AppSnackbar.showSnackbarError(
+          'Please connect at least one knowledge data source (Omi or Twitter)');
       return;
     }
 
@@ -354,7 +373,8 @@ class PersonaProvider extends ChangeNotifier {
           onShowSuccessDialog!(personaUrl);
         }
       } else {
-        AppSnackbar.showSnackbarError('Failed to create your persona. Please try again later.');
+        AppSnackbar.showSnackbarError(
+            'Failed to create your persona. Please try again later.');
       }
     } catch (e) {
       AppSnackbar.showSnackbarError('Failed to create persona: $e');
@@ -401,7 +421,7 @@ class PersonaProvider extends ChangeNotifier {
   }
 
   Future onTwitterVerifiedCompleted() async {
-    debugPrint("routing ${routing}");
+    debugPrint("routing $routing");
     if (routing == PersonaProfileRouting.no_device) {
       return;
     }

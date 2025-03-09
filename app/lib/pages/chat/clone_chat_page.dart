@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:friend_private/utils/analytics/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/app.dart';
 import 'package:friend_private/pages/chat/page.dart';
@@ -40,7 +39,8 @@ class CloneChatPageState extends State<CloneChatPage> {
           await appProvider.toggleApp(selectedApp.id, true, null);
         }
 
-        var messageProvider = Provider.of<MessageProvider>(context, listen: false);
+        var messageProvider =
+            Provider.of<MessageProvider>(context, listen: false);
         await messageProvider.refreshMessages();
         if (messageProvider.messages.isEmpty) {
           messageProvider.sendInitialAppMessage(selectedApp);
@@ -53,7 +53,8 @@ class CloneChatPageState extends State<CloneChatPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer3<MessageProvider, ConnectivityProvider, PersonaProvider>(
-      builder: (context, provider, connectivityProvider, personaProvider, child) {
+      builder:
+          (context, provider, connectivityProvider, personaProvider, child) {
         return Scaffold(
           backgroundColor: Theme.of(context).colorScheme.primary,
           appBar: AppBar(
@@ -76,7 +77,8 @@ class CloneChatPageState extends State<CloneChatPage> {
                   ),
                   onPressed: () {
                     personaProvider.setRouting(PersonaProfileRouting.no_device);
-                    routeToPage(context, const PersonaProfilePage(), replace: true);
+                    routeToPage(context, const PersonaProfilePage(),
+                        replace: true);
                   },
                 ),
               ],

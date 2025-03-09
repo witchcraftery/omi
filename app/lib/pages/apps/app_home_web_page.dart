@@ -7,15 +7,16 @@ class AppHomeWebPage extends StatefulWidget {
   final App app;
 
   const AppHomeWebPage({
-    Key? key,
+    super.key,
     required this.app,
-  }) : super(key: key);
+  });
 
   @override
   State<AppHomeWebPage> createState() => _AppHomeWebPageState();
 }
 
-class _AppHomeWebPageState extends State<AppHomeWebPage> with SingleTickerProviderStateMixin {
+class _AppHomeWebPageState extends State<AppHomeWebPage>
+    with SingleTickerProviderStateMixin {
   late final WebViewController _controller;
   late final AnimationController _animationController;
   late final Animation<Offset> _slideAnimation;

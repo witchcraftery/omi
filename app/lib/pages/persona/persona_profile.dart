@@ -45,7 +45,8 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final provider = Provider.of<PersonaProvider>(context, listen: false);
-      if (provider.routing == PersonaProfileRouting.apps_updates && provider.userPersona != null) {
+      if (provider.routing == PersonaProfileRouting.apps_updates &&
+          provider.userPersona != null) {
         provider.prepareUpdatePersona(provider.userPersona!);
       } else {
         await provider.getVerifiedUserPersona();
@@ -70,8 +71,10 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
-              leading: Consumer<PersonaProvider>(builder: (context, personaProvider, _) {
-                return personaProvider.routing == PersonaProfileRouting.apps_updates
+              leading: Consumer<PersonaProvider>(
+                  builder: (context, personaProvider, _) {
+                return personaProvider.routing ==
+                        PersonaProfileRouting.apps_updates
                     ? IconButton(
                         icon: const Icon(Icons.arrow_back, color: Colors.white),
                         onPressed: () {
@@ -80,24 +83,36 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                       )
                     : GestureDetector(
                         onTap: () async {
-                          if (personaProvider.routing == PersonaProfileRouting.no_device) {
-                            routeToPage(context, const CloneChatPage(), replace: false);
+                          if (personaProvider.routing ==
+                              PersonaProfileRouting.no_device) {
+                            routeToPage(context, const CloneChatPage(),
+                                replace: false);
                           } else {
                             context.read<HomeProvider>().setIndex(1);
-                            if (context.read<HomeProvider>().onSelectedIndexChanged != null) {
-                              context.read<HomeProvider>().onSelectedIndexChanged!(1);
+                            if (context
+                                    .read<HomeProvider>()
+                                    .onSelectedIndexChanged !=
+                                null) {
+                              context
+                                  .read<HomeProvider>()
+                                  .onSelectedIndexChanged!(1);
                             }
                             var appId = persona!.id;
-                            var appProvider = Provider.of<AppProvider>(context, listen: false);
-                            var messageProvider = Provider.of<MessageProvider>(context, listen: false);
+                            var appProvider = Provider.of<AppProvider>(context,
+                                listen: false);
+                            var messageProvider = Provider.of<MessageProvider>(
+                                context,
+                                listen: false);
                             App? selectedApp;
                             if (appId.isNotEmpty) {
-                              selectedApp = await appProvider.getAppFromId(appId);
+                              selectedApp =
+                                  await appProvider.getAppFromId(appId);
                             }
                             appProvider.setSelectedChatAppId(appId);
                             await messageProvider.refreshMessages();
                             if (messageProvider.messages.isEmpty) {
-                              messageProvider.sendInitialAppMessage(selectedApp);
+                              messageProvider
+                                  .sendInitialAppMessage(selectedApp);
                             }
                           }
                         },
@@ -113,13 +128,16 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
               }),
               actions: [
                 // Only show settings icon for create_my_clone or home routing
-                Consumer<PersonaProvider>(builder: (context, personaProvider, _) {
-                  if (personaProvider.routing == PersonaProfileRouting.no_device)
+                Consumer<PersonaProvider>(
+                    builder: (context, personaProvider, _) {
+                  if (personaProvider.routing ==
+                      PersonaProfileRouting.no_device) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
                         onTap: () async {
-                          await routeToPage(context, const SettingsPage(mode: SettingsMode.no_device));
+                          await routeToPage(context,
+                              const SettingsPage(mode: SettingsMode.no_device));
                         },
                         child: SvgPicture.asset(
                           'assets/images/ic_setting_persona.svg',
@@ -128,22 +146,32 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                         ),
                       ),
                     );
-                  if (personaProvider.routing == PersonaProfileRouting.create_my_clone ||
-                      personaProvider.routing == PersonaProfileRouting.home)
+                  }
+                  if (personaProvider.routing ==
+                          PersonaProfileRouting.create_my_clone ||
+                      personaProvider.routing == PersonaProfileRouting.home) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
                         onTap: () async {
                           MixpanelManager().pageOpened('Settings');
-                          String language = SharedPreferencesUtil().recordingsLanguage;
-                          bool hasSpeech = SharedPreferencesUtil().hasSpeakerProfile;
-                          String transcriptModel = SharedPreferencesUtil().transcriptionModel;
+                          String language =
+                              SharedPreferencesUtil().recordingsLanguage;
+                          bool hasSpeech =
+                              SharedPreferencesUtil().hasSpeakerProfile;
+                          String transcriptModel =
+                              SharedPreferencesUtil().transcriptionModel;
                           await routeToPage(context, const SettingsPage());
-                          if (language != SharedPreferencesUtil().recordingsLanguage ||
-                              hasSpeech != SharedPreferencesUtil().hasSpeakerProfile ||
-                              transcriptModel != SharedPreferencesUtil().transcriptionModel) {
+                          if (language !=
+                                  SharedPreferencesUtil().recordingsLanguage ||
+                              hasSpeech !=
+                                  SharedPreferencesUtil().hasSpeakerProfile ||
+                              transcriptModel !=
+                                  SharedPreferencesUtil().transcriptionModel) {
                             if (context.mounted) {
-                              context.read<CaptureProvider>().onRecordProfileSettingChanged();
+                              context
+                                  .read<CaptureProvider>()
+                                  .onRecordProfileSettingChanged();
                             }
                           }
                         },
@@ -154,6 +182,7 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                         ),
                       ),
                     );
+                  }
                   return const SizedBox.shrink();
                 }),
               ],
@@ -167,14 +196,16 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                 : Stack(
                     children: [
                       SingleChildScrollView(
-                        padding: EdgeInsets.only(bottom: widget.bottomMargin ?? 0),
+                        padding:
+                            EdgeInsets.only(bottom: widget.bottomMargin ?? 0),
                         child: Column(
                           children: [
                             Stack(
                               alignment: Alignment.center,
                               children: [
                                 GestureDetector(
-                                  onTap: _isPersonaEditable(provider.routing) && !provider.isLoading
+                                  onTap: _isPersonaEditable(provider.routing) &&
+                                          !provider.isLoading
                                       ? () async {
                                           await provider.pickAndUpdateImage();
                                         }
@@ -192,28 +223,33 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                                           ),
                                         ),
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(50),
+                                          borderRadius:
+                                              BorderRadius.circular(50),
                                           child: provider.selectedImage != null
                                               ? Image.file(
                                                   provider.selectedImage!,
                                                   fit: BoxFit.cover,
                                                 )
                                               : persona.image.isEmpty
-                                                  ? Image.asset(Assets.images.logoTransparentV2.path)
+                                                  ? Image.asset(Assets.images
+                                                      .logoTransparentV2.path)
                                                   : Image.network(
                                                       persona.image,
                                                       fit: BoxFit.cover,
                                                     ),
                                         ),
                                       ),
-                                      if (_isPersonaEditable(provider.routing) && !provider.isLoading)
+                                      if (_isPersonaEditable(
+                                              provider.routing) &&
+                                          !provider.isLoading)
                                         Positioned.fill(
                                           child: Opacity(
                                             opacity: 1.0,
                                             child: Container(
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color: Colors.black.withOpacity(0.3),
+                                                color: Colors.black
+                                                    .withOpacity(0.3),
                                               ),
                                               child: const Center(
                                                 child: Icon(
@@ -240,7 +276,8 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                                       border: Border.all(
                                         color: const Color(0xFF494947),
                                         width: 2.5,
-                                        strokeAlign: BorderSide.strokeAlignOutside,
+                                        strokeAlign:
+                                            BorderSide.strokeAlignOutside,
                                       ),
                                     ),
                                   ),
@@ -251,7 +288,8 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                             GestureDetector(
                               onTap: _isPersonaEditable(provider.routing)
                                   ? () {
-                                      _showNameEditDialog(context, persona, provider);
+                                      _showNameEditDialog(
+                                          context, persona, provider);
                                     }
                                   : null,
                               child: Row(
@@ -287,19 +325,24 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                             ),
                             const SizedBox(height: 24),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
                               child: TextButton(
                                 onPressed: () async {
-                                  await Posthog().capture(eventName: 'share_persona_clicked', properties: {
-                                    'persona_username': persona.username ?? '',
-                                  });
+                                  await Posthog().capture(
+                                      eventName: 'share_persona_clicked',
+                                      properties: {
+                                        'persona_username':
+                                            persona.username ?? '',
+                                      });
                                   Share.share(
                                     'https://personas.omi.me/u/${persona.username}',
                                     subject: '${persona.getName()} Persona',
                                   );
                                 },
                                 style: TextButton.styleFrom(
-                                  backgroundColor: Colors.white.withOpacity(0.08),
+                                  backgroundColor:
+                                      Colors.white.withOpacity(0.08),
                                   minimumSize: const Size(double.infinity, 50),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
@@ -308,7 +351,8 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    SvgPicture.asset(Assets.images.linkIcon.path),
+                                    SvgPicture.asset(
+                                        Assets.images.linkIcon.path),
                                     const SizedBox(width: 14),
                                     Text(
                                       'Share Public Link',
@@ -325,7 +369,8 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                             if (_isPersonaEditable(provider.routing)) ...[
                               const SizedBox(height: 16),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24.0),
                                 child: Row(
                                   children: [
                                     Text(
@@ -369,7 +414,10 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                                           ),
                                         ),
                                         Container(
-                                          height: MediaQuery.of(context).size.height * 0.45,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.45,
                                           decoration: const BoxDecoration(
                                             color: Colors.transparent,
                                             borderRadius: BorderRadius.only(
@@ -378,15 +426,18 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                                             ),
                                           ),
                                           child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               const SizedBox(height: 12),
                                               Container(
                                                 width: 40,
                                                 height: 4,
                                                 decoration: BoxDecoration(
-                                                  color: Colors.white.withOpacity(0.2),
-                                                  borderRadius: BorderRadius.circular(2),
+                                                  color: Colors.white
+                                                      .withOpacity(0.2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(2),
                                                 ),
                                               ),
                                               const Spacer(),
@@ -404,30 +455,44 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                                                 'Create a more accurate clone with\nyour personal conversations',
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                  color: Colors.white.withOpacity(0.6),
+                                                  color: Colors.white
+                                                      .withOpacity(0.6),
                                                   fontSize: 16,
                                                 ),
                                               ),
                                               const Spacer(),
                                               Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 24),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 24),
                                                 child: Column(
                                                   children: [
                                                     ElevatedButton(
                                                       onPressed: () async {
-                                                        await Posthog()
-                                                            .capture(eventName: 'i_dont_have_device_clicked');
-                                                        await launchUrl(
-                                                            Uri.parse('https://www.omi.me/?_ref=omi_persona_flow'));
+                                                        await Posthog().capture(
+                                                            eventName:
+                                                                'i_dont_have_device_clicked');
+                                                        await launchUrl(Uri.parse(
+                                                            'https://www.omi.me/?_ref=omi_persona_flow'));
                                                       },
-                                                      style: ElevatedButton.styleFrom(
-                                                        backgroundColor: Colors.transparent,
-                                                        foregroundColor: Colors.white,
-                                                        minimumSize: const Size(double.infinity, 56),
-                                                        shape: RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(16),
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                        foregroundColor:
+                                                            Colors.white,
+                                                        minimumSize: const Size(
+                                                            double.infinity,
+                                                            56),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(16),
                                                           side: BorderSide(
-                                                            color: Colors.white.withOpacity(0.12),
+                                                            color: Colors.white
+                                                                .withOpacity(
+                                                                    0.12),
                                                             width: 4,
                                                           ),
                                                         ),
@@ -436,7 +501,8 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                                                         'Get Omi',
                                                         style: TextStyle(
                                                           fontSize: 17,
-                                                          fontWeight: FontWeight.w500,
+                                                          fontWeight:
+                                                              FontWeight.w500,
                                                         ),
                                                       ),
                                                     ),
@@ -444,14 +510,17 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                                                     TextButton(
                                                       onPressed: () {
                                                         Navigator.pop(context);
-                                                        routeToPage(context, const OnboardingWrapper());
+                                                        routeToPage(context,
+                                                            const OnboardingWrapper());
                                                       },
                                                       child: Text(
                                                         'I have Omi device',
                                                         style: TextStyle(
                                                           fontSize: 18,
-                                                          color: Colors.white.withOpacity(0.6),
-                                                          fontWeight: FontWeight.bold,
+                                                          color: Colors.white
+                                                              .withOpacity(0.6),
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                         ),
                                                       ),
                                                     ),
@@ -467,19 +536,22 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                                   );
                                 },
                                 child: Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 16),
                                   width: double.infinity,
                                   padding: const EdgeInsets.all(20),
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
-                                      image: AssetImage(Assets.images.gradientCard.path),
+                                      image: AssetImage(
+                                          Assets.images.gradientCard.path),
                                       fit: BoxFit.fill,
                                       opacity: 0.9,
                                     ),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       const Text(
                                         'Clone from device',
@@ -504,12 +576,14 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                               ),
                             const SizedBox(height: 28),
                             Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 16),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 16),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 8.0, bottom: 12),
+                                    padding: const EdgeInsets.only(
+                                        left: 8.0, bottom: 12),
                                     child: Text(
                                       'Connected Knowledge Data',
                                       style: TextStyle(
@@ -522,15 +596,22 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                                   if (provider.hasOmiConnection) ...[
                                     GestureDetector(
                                       onTap: () {
-                                        if (provider.routing == PersonaProfileRouting.no_device) {
-                                          var provider = Provider.of<AuthenticationProvider>(context, listen: false);
-                                          if (provider.user == null || provider.user!.isAnonymous) {
-                                            routeToPage(context, const OnboardingWrapper());
+                                        if (provider.routing ==
+                                            PersonaProfileRouting.no_device) {
+                                          var provider = Provider.of<
+                                                  AuthenticationProvider>(
+                                              context,
+                                              listen: false);
+                                          if (provider.user == null ||
+                                              provider.user!.isAnonymous) {
+                                            routeToPage(context,
+                                                const OnboardingWrapper());
                                           }
                                         }
                                       },
                                       child: _buildSocialLink(
-                                        icon: Assets.images.logoTransparent.path,
+                                        icon:
+                                            Assets.images.logoTransparent.path,
                                         text: persona.username ?? 'username',
                                         isConnected: provider.hasOmiConnection,
                                       ),
@@ -539,21 +620,30 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                                   ],
                                   GestureDetector(
                                     onTap: () {
-                                      if (!_isPersonaEditable(provider.routing)) {
+                                      if (!_isPersonaEditable(
+                                          provider.routing)) {
                                         return;
                                       }
                                       if (!provider.hasTwitterConnection) {
-                                        routeToPage(context, SocialHandleScreen(routing: provider.routing));
+                                        routeToPage(
+                                            context,
+                                            SocialHandleScreen(
+                                                routing: provider.routing));
                                         return;
                                       }
 
-                                      _showDisconnectTwitterConfirmation(context, provider);
+                                      _showDisconnectTwitterConfirmation(
+                                          context, provider);
                                     },
                                     child: _buildSocialLink(
                                       icon: Assets.images.xLogoMini.path,
-                                      text: provider.twitterProfile?['username'] ?? '@username',
-                                      isConnected: provider.hasTwitterConnection,
-                                      showConnect: !provider.hasTwitterConnection,
+                                      text:
+                                          provider.twitterProfile['username'] ??
+                                              '@username',
+                                      isConnected:
+                                          provider.hasTwitterConnection,
+                                      showConnect:
+                                          !provider.hasTwitterConnection,
                                     ),
                                   ),
                                   const SizedBox(height: 12),
@@ -628,7 +718,8 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
     });
   }
 
-  void _showNameEditDialog(BuildContext context, App persona, PersonaProvider provider) {
+  void _showNameEditDialog(
+      BuildContext context, App persona, PersonaProvider provider) {
     final TextEditingController nameController = provider.nameController;
 
     showDialog(
@@ -672,13 +763,15 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
     );
   }
 
-  void _showDisconnectTwitterConfirmation(BuildContext context, PersonaProvider provider) {
+  void _showDisconnectTwitterConfirmation(
+      BuildContext context, PersonaProvider provider) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Theme.of(context).colorScheme.surface,
-          title: const Text('Disconnect Twitter', style: TextStyle(color: Colors.white)),
+          title: const Text('Disconnect Twitter',
+              style: TextStyle(color: Colors.white)),
           content: const Text(
             'Are you sure you want to disconnect your Twitter account? Your persona will no longer have access to your Twitter data.',
             style: TextStyle(color: Colors.white70),
@@ -695,7 +788,8 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                 provider.disconnectTwitter();
                 Navigator.of(context).pop();
               },
-              child: const Text('Disconnect', style: TextStyle(color: Colors.redAccent)),
+              child: const Text('Disconnect',
+                  style: TextStyle(color: Colors.redAccent)),
             ),
           ],
         );
@@ -725,12 +819,14 @@ class _PersonaProfilePageState extends State<PersonaProfilePage> {
                 Navigator.of(context).pop();
                 SharedPreferencesUtil().hasOmiDevice = null;
                 SharedPreferencesUtil().verifiedPersonaId = null;
-                Provider.of<PersonaProvider>(context, listen: false).setRouting(PersonaProfileRouting.no_device);
+                Provider.of<PersonaProvider>(context, listen: false)
+                    .setRouting(PersonaProfileRouting.no_device);
                 await signOut();
                 Navigator.of(context).pop();
                 routeToPage(context, const DeciderWidget(), replace: true);
               },
-              child: const Text('Sign Out', style: TextStyle(color: Colors.redAccent)),
+              child: const Text('Sign Out',
+                  style: TextStyle(color: Colors.redAccent)),
             ),
           ],
         );

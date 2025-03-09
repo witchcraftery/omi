@@ -1,12 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:friend_private/pages/conversations/sync_page.dart';
 import 'package:friend_private/pages/sdcard/sdcard_transfer_progress.dart';
 import 'package:friend_private/providers/capture_provider.dart';
 import 'package:friend_private/providers/conversation_provider.dart';
-import 'package:friend_private/utils/other/string_utils.dart';
-import 'package:friend_private/utils/other/temp.dart';
 import 'package:provider/provider.dart';
 
 class LocalSyncWidget extends StatefulWidget {
@@ -49,28 +46,33 @@ class _LocalSyncWidgetState extends State<LocalSyncWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<ConversationProvider, CaptureProvider>(builder: (context, provider, captureProvider, child) {
+    return Consumer2<ConversationProvider, CaptureProvider>(
+        builder: (context, provider, captureProvider, child) {
       var previousStatus = _status;
       if (provider.missingWalsInSeconds >= 120) {
         _status = LocalSyncStatus.flush;
       } else if (!captureProvider.isWalSupported) {
         _status = LocalSyncStatus.disabled;
-      } else if (!captureProvider.transcriptServiceReady && captureProvider.recordingDeviceServiceReady) {
+      } else if (!captureProvider.transcriptServiceReady &&
+          captureProvider.recordingDeviceServiceReady) {
         _status = LocalSyncStatus.inProgress;
       } else {
         _status = LocalSyncStatus.disabled;
       }
 
       // miss seconds
-      if (_status == LocalSyncStatus.inProgress || _status == LocalSyncStatus.flush) {
+      if (_status == LocalSyncStatus.inProgress ||
+          _status == LocalSyncStatus.flush) {
         if (previousStatus != _status) {
           _missSeconds = provider.missingWalsInSeconds;
         }
       }
 
       // timer
-      if ((_status == LocalSyncStatus.inProgress || _status == LocalSyncStatus.flush) &&
-          (!captureProvider.transcriptServiceReady && captureProvider.recordingDeviceServiceReady)) {
+      if ((_status == LocalSyncStatus.inProgress ||
+              _status == LocalSyncStatus.flush) &&
+          (!captureProvider.transcriptServiceReady &&
+              captureProvider.recordingDeviceServiceReady)) {
         _missSecondsInEstTimerEnabled = true;
       } else {
         _missSecondsInEstTimerEnabled = false;
@@ -87,7 +89,8 @@ class _LocalSyncWidgetState extends State<LocalSyncWidget> {
           padding: const EdgeInsets.all(16),
           child: Text(
             '${secondsToHumanReadable(_missSeconds.toString())} On-Device Conversations',
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 16),
+            style:
+                Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 16),
             textAlign: TextAlign.center,
           ),
         );
@@ -95,7 +98,7 @@ class _LocalSyncWidgetState extends State<LocalSyncWidget> {
 
       // ready to sync
       if (_status == LocalSyncStatus.flush) {
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
         // return GestureDetector(
         //   onTap: () {
         //     routeToPage(context, const SyncPage());

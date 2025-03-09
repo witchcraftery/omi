@@ -10,10 +10,16 @@ abstract class ISocketService {
   void stop();
 
   Future<TranscriptSegmentSocketService?> conversation(
-      {required BleAudioCodec codec, required int sampleRate, String language = defaultLanguage, bool force = false});
+      {required BleAudioCodec codec,
+      required int sampleRate,
+      String language = defaultLanguage,
+      bool force = false});
 
   Future<TranscriptSegmentSocketService?> speechProfile(
-      {required BleAudioCodec codec, required int sampleRate, String language = defaultLanguage, bool force = false});
+      {required BleAudioCodec codec,
+      required int sampleRate,
+      String language = defaultLanguage,
+      bool force = false});
 }
 
 abstract interface class ISocketServiceSubsciption {}
@@ -51,12 +57,13 @@ class SocketServicePool extends ISocketService {
         return _socket;
       }
 
-      debugPrint("_connect force ${force} state ${_socket?.state}");
+      debugPrint("_connect force $force state ${_socket?.state}");
 
       // new socket
       await _socket?.stop();
 
-      _socket = ConversationTranscriptSegmentSocketService.create(sampleRate, codec, language);
+      _socket = ConversationTranscriptSegmentSocketService.create(
+          sampleRate, codec, language);
       await _socket?.start();
       if (_socket?.state != SocketServiceState.connected) {
         return null;
@@ -77,7 +84,8 @@ class SocketServicePool extends ISocketService {
       String language = defaultLanguage,
       bool force = false}) async {
     debugPrint("socket conversation > $codec $sampleRate $force");
-    return await socket(codec: codec, sampleRate: sampleRate, language: language, force: force);
+    return await socket(
+        codec: codec, sampleRate: sampleRate, language: language, force: force);
   }
 
   @override
@@ -87,6 +95,7 @@ class SocketServicePool extends ISocketService {
       String language = defaultLanguage,
       bool force = false}) async {
     debugPrint("socket speech profile > $codec $sampleRate $force");
-    return await socket(codec: codec, sampleRate: sampleRate, language: language, force: force);
+    return await socket(
+        codec: codec, sampleRate: sampleRate, language: language, force: force);
   }
 }

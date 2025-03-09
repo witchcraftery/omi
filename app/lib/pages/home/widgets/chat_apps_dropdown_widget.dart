@@ -16,7 +16,8 @@ class ChatAppsDropdownWidget extends StatelessWidget {
   final PageController? controller;
   final ChatMode mode;
 
-  ChatAppsDropdownWidget({super.key, this.controller, this.mode = ChatMode.chat});
+  ChatAppsDropdownWidget(
+      {super.key, this.controller, this.mode = ChatMode.chat});
 
   final FocusNode focusNode = FocusNode();
 
@@ -33,7 +34,8 @@ class ChatAppsDropdownWidget extends StatelessWidget {
         return child!;
       },
       child: Consumer<AppProvider>(builder: (context, provider, child) {
-        var selectedApp = provider.apps.firstWhereOrNull((app) => app.id == provider.selectedChatAppId);
+        var selectedApp = provider.apps
+            .firstWhereOrNull((app) => app.id == provider.selectedChatAppId);
         return Padding(
           padding: const EdgeInsets.only(left: 0),
           child: Container(
@@ -45,7 +47,9 @@ class ChatAppsDropdownWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  selectedApp != null ? _getAppAvatar(selectedApp) : _getOmiAvatar(),
+                  selectedApp != null
+                      ? _getAppAvatar(selectedApp)
+                      : _getOmiAvatar(),
                   const SizedBox(width: 8),
                   Container(
                     constraints: const BoxConstraints(
@@ -60,7 +64,8 @@ class ChatAppsDropdownWidget extends StatelessWidget {
                   const SizedBox(width: 8),
                   const SizedBox(
                     width: 24,
-                    child: Icon(Icons.keyboard_arrow_down, color: Colors.white60, size: 16),
+                    child: Icon(Icons.keyboard_arrow_down,
+                        color: Colors.white60, size: 16),
                   ),
                 ],
               ),
@@ -69,9 +74,13 @@ class ChatAppsDropdownWidget extends StatelessWidget {
                 maxWidth: 250.0,
                 maxHeight: 350.0,
               ),
-              offset:
-                  Offset((MediaQuery.sizeOf(context).width - 250) / 2 / MediaQuery.devicePixelRatioOf(context), 114),
-              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
+              offset: Offset(
+                  (MediaQuery.sizeOf(context).width - 250) /
+                      2 /
+                      MediaQuery.devicePixelRatioOf(context),
+                  114),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16))),
               onSelected: (String? val) async {
                 if (val == null || val == provider.selectedChatAppId) {
                   return;
@@ -87,7 +96,8 @@ class ChatAppsDropdownWidget extends StatelessWidget {
                       }, () {
                         context.read<MessageProvider>().clearChat();
                         Navigator.of(context).pop();
-                      }, "Clear Chat?", "Are you sure you want to clear the chat? This action cannot be undone.");
+                      }, "Clear Chat?",
+                          "Are you sure you want to clear the chat? This action cannot be undone.");
                     },
                   );
                   return;
@@ -97,13 +107,17 @@ class ChatAppsDropdownWidget extends StatelessWidget {
                 if (val == 'enable') {
                   MixpanelManager().pageOpened('Chat Apps');
                   context.read<HomeProvider>().setIndex(2);
-                  controller?.animateToPage(2, duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+                  controller?.animateToPage(2,
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeInOut);
                   return;
                 }
 
                 // select app by id
                 provider.setSelectedChatAppId(val);
-                await context.read<MessageProvider>().refreshMessages(dropdownSelected: true);
+                await context
+                    .read<MessageProvider>()
+                    .refreshMessages(dropdownSelected: true);
                 var app = provider.getSelectedApp();
                 if (context.read<MessageProvider>().messages.isEmpty) {
                   context.read<MessageProvider>().sendInitialAppMessage(app);
@@ -172,14 +186,16 @@ class ChatAppsDropdownWidget extends StatelessWidget {
     );
   }
 
-  List<PopupMenuItem<String>> _getAppsDropdownItems(BuildContext context, AppProvider provider) {
-    return mode == ChatMode.chat_clone 
+  List<PopupMenuItem<String>> _getAppsDropdownItems(
+      BuildContext context, AppProvider provider) {
+    return mode == ChatMode.chat_clone
         ? _getCloneChatDropdownItems(provider)
         : _getChatDropdownItems(provider);
   }
 
   List<PopupMenuItem<String>> _getCloneChatDropdownItems(AppProvider provider) {
-    var selectedApp = provider.apps.firstWhereOrNull((app) => app.id == provider.selectedChatAppId);
+    var selectedApp = provider.apps
+        .firstWhereOrNull((app) => app.id == provider.selectedChatAppId);
     return [
       const PopupMenuItem<String>(
         height: 40,
@@ -190,7 +206,8 @@ class ChatAppsDropdownWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Clear Chat', style: TextStyle(color: Colors.redAccent, fontSize: 16)),
+              Text('Clear Chat',
+                  style: TextStyle(color: Colors.redAccent, fontSize: 16)),
               SizedBox(
                 width: 24,
                 child: Icon(Icons.delete, color: Colors.redAccent, size: 16),
@@ -203,7 +220,9 @@ class ChatAppsDropdownWidget extends StatelessWidget {
         height: 1,
         child: Divider(height: 1),
       ),
-      ...provider.apps.where((p) => p.enabled && p.worksWithChat()).map<PopupMenuItem<String>>((App app) {
+      ...provider.apps
+          .where((p) => p.enabled && p.worksWithChat())
+          .map<PopupMenuItem<String>>((App app) {
         return PopupMenuItem<String>(
           height: 40,
           value: app.id,
@@ -221,13 +240,17 @@ class ChatAppsDropdownWidget extends StatelessWidget {
                       child: Text(
                         overflow: TextOverflow.fade,
                         app.getName(),
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 16),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16),
                       ),
                     ),
                     selectedApp?.id == app.id
                         ? const SizedBox(
                             width: 24,
-                            child: Icon(Icons.check, color: Colors.white60, size: 16),
+                            child: Icon(Icons.check,
+                                color: Colors.white60, size: 16),
                           )
                         : const SizedBox.shrink(),
                   ],
@@ -236,12 +259,13 @@ class ChatAppsDropdownWidget extends StatelessWidget {
             ],
           ),
         );
-      }).toList(),
+      }),
     ];
   }
 
   List<PopupMenuItem<String>> _getChatDropdownItems(AppProvider provider) {
-    var selectedApp = provider.apps.firstWhereOrNull((app) => app.id == provider.selectedChatAppId);
+    var selectedApp = provider.apps
+        .firstWhereOrNull((app) => app.id == provider.selectedChatAppId);
     return [
       const PopupMenuItem<String>(
         height: 40,
@@ -252,7 +276,8 @@ class ChatAppsDropdownWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Clear Chat', style: TextStyle(color: Colors.redAccent, fontSize: 16)),
+              Text('Clear Chat',
+                  style: TextStyle(color: Colors.redAccent, fontSize: 16)),
               SizedBox(
                 width: 24,
                 child: Icon(Icons.delete, color: Colors.redAccent, size: 16),
@@ -275,7 +300,8 @@ class ChatAppsDropdownWidget extends StatelessWidget {
           children: [
             const SizedBox(
               width: 24,
-              child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+              child:
+                  Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -284,7 +310,8 @@ class ChatAppsDropdownWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Enable Apps', style: TextStyle(color: Colors.white, fontSize: 16)),
+                    Text('Enable Apps',
+                        style: TextStyle(color: Colors.white, fontSize: 16)),
                     SizedBox(
                       width: 24,
                       child: Icon(Icons.apps, color: Colors.white60, size: 16),
@@ -315,12 +342,16 @@ class ChatAppsDropdownWidget extends StatelessWidget {
                   children: [
                     const Text(
                       "Omi",
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 16),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16),
                     ),
                     selectedApp == null
                         ? const SizedBox(
                             width: 24,
-                            child: Icon(Icons.check, color: Colors.white60, size: 16),
+                            child: Icon(Icons.check,
+                                color: Colors.white60, size: 16),
                           )
                         : const SizedBox.shrink(),
                   ],
@@ -330,7 +361,9 @@ class ChatAppsDropdownWidget extends StatelessWidget {
           ],
         ),
       ),
-      ...provider.apps.where((p) => p.enabled && p.worksWithChat()).map<PopupMenuItem<String>>((App app) {
+      ...provider.apps
+          .where((p) => p.enabled && p.worksWithChat())
+          .map<PopupMenuItem<String>>((App app) {
         return PopupMenuItem<String>(
           height: 40,
           value: app.id,
@@ -348,13 +381,17 @@ class ChatAppsDropdownWidget extends StatelessWidget {
                       child: Text(
                         overflow: TextOverflow.fade,
                         app.getName(),
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 16),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16),
                       ),
                     ),
                     selectedApp?.id == app.id
                         ? const SizedBox(
                             width: 24,
-                            child: Icon(Icons.check, color: Colors.white60, size: 16),
+                            child: Icon(Icons.check,
+                                color: Colors.white60, size: 16),
                           )
                         : const SizedBox.shrink(),
                   ],
@@ -363,7 +400,7 @@ class ChatAppsDropdownWidget extends StatelessWidget {
             ],
           ),
         );
-      }).toList(),
+      }),
     ];
   }
 }
