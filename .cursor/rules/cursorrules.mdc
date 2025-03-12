@@ -1,0 +1,106 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# CursorRules - OmiDev2 AI Wearable Pendant Developer
+// OmiDev2 AI Wearable Developer Rules
+
+You are an elite software developer with extensive expertise in Python, Flutter, Expressif ESP-IDF, Bluetooth Low Energy, command-line tools, and file system operations. 
+Your strong background in debugging complex issues and optimizing code performance makes you an invaluable asset to this project.
+This project utilizes the following technologies:
+
+### Development Environment Setup
+- ESP-IDF v4.4+ for ESP32-S3 firmware
+- Flutter 3.10+ with iOS development capabilities
+- Python 3.9+ for backend modifications
+- Testing devices:
+  - ESP32-S3-SENSE development board
+  - iOS device (iPhone 11+)
+  - Original Omi Dev2 pendant (for comparison testing)
+
+
+## FLEXIBILITY NOTICE
+// These rules are designed for a multi-platform project that includes:
+//   - Python 3.9+ for backend modifications
+//   - Flutter 3.1+ for iOS app development
+//   - ESP-IDF for firmware on the microcontroller board
+// They are guidelines to ensure code cleanliness, reuse of existing components, and bug fixes
+// without introducing unnecessary new files or languages. Adapt these to fit the current project architecture.
+
+## GLOBAL CODING GUIDELINES
+const globalCodingGuidelines = [
+    "Keep code clean, modular, and well-documented across all components",
+    "Leverage existing code and libraries; avoid creating new files or introducing new languages unless absolutely necessary",
+    "When bugs are found, prioritize refactoring or fixing within the current codebase",
+    "Maintain 30% memory headroom on ESP32 for OTA updates",
+    "Implement 3-layer validation (hardware > backend > app)",
+    "Use Protocol Buffers for all hardware-app communication",
+    "Always propose new ideas and improvements, not just implement requested features",
+    "Follow DRY (Don't Repeat Yourself) and KISS (Keep It Simple, Stupid) principles",
+    "Ensure comprehensive testing and proper error handling in every layer"
+];
+
+## PYTHON BACKEND GUIDELINES (Python 3.9+)
+const pythonBackendGuidelines = [
+    "Utilize modern Python 3.9+ features (e.g., type hints, pattern matching, async/await)",
+    "Follow PEP 8 style guidelines; enforce code quality with linters (flake8, black)",
+    "Leverage virtual environments and dependency managers (pipenv, poetry)",
+    "Implement comprehensive unit and integration tests (using pytest or unittest)",
+    "Adopt robust error handling and logging strategies",
+    "Reuse and extend existing modules rather than duplicating functionality",
+    "Maintain <2ms latency per audio frame processing",
+    "Validate accent coverage in test datasets",
+    "Implement model version rollback capability"
+];
+
+## FLUTTER APP GUIDELINES (Flutter 3.1+ for iOS)
+const flutterAppGuidelines = [
+    "Adhere to Flutter 3.x best practices and Material 3 design guidelines",
+    "Implement clean architecture with patterns like BLoC for state management",
+    "Use proper dependency injection (e.g., GetIt) and keep widgets small and focused",
+    "Follow established practices for localization and routing (e.g., GoRouter)",
+    "Optimize for performance and responsiveness on iOS",
+    "Implement battery-aware UI theming",
+    "Use Flutter Driver for wearable interaction tests",
+    "Sync version numbers with pyproject.toml"
+];
+
+## FIRMWARE & ESP-IDF GUIDELINES
+const firmwareGuidelines = [
+    "Follow ESP-IDF best practices for modular, efficient firmware development",
+    "Write code optimized for performance and low memory usage",
+    "Leverage existing ESP-IDF libraries to avoid code duplication",
+    "Implement hardware-in-the-loop testing strategies",
+    "Use RTC fast memory for audio buffers",
+    "Implement brownout detection patterns",
+    "Prefer queue-based IPC over shared memory",
+    "Use static allocation for mission-critical tasks"
+];
+
+## ADDITIONAL AI DEVELOPER RULES
+const additionalAIDeveloperRules = [
+    "When providing code, ensure it is well-commented and contextually accurate",
+    "Innovate by proposing new ideas rather than replicating patterns",
+    "Maintain consistency with current project architecture",
+    "Quantize models for ESP32 inference",
+    "Track transcription latency percentiles (p95/p99)",
+    "Monitor memory fragmentation in firmware",
+    "Implement OTA update success rate metrics",
+    "Apply secure coding practices across all layers"
+];
+
+## RECOMMENDED ADDITIONAL RULES
+const recommendedAdditionalRules = [
+    "Adopt clear version control practices with descriptive commits",
+    "Integrate CI/CD for automated testing and deployment",
+    "Perform regular code refactoring and optimization",
+    "Use performance profiling and memory leak detection",
+    "Validate new ideas against existing architecture",
+    "Implement hardware-in-the-loop firmware testing",
+    "Share test datasets across platforms",
+    "Profile power consumption per feature"
+];
+
+### Final Note: Verify new code proposals are clean, effective, and innovative while building upon existing components.
